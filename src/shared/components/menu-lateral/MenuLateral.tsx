@@ -4,13 +4,43 @@ import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SyncIcon from '@mui/icons-material/Sync';
 import { useDrawerContext } from '../../contexts';
+import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 
-
+interface IListItemLinkProps {
+    to: string;
+    icon: any;
+    label: string;
+    onClick: (() => void) | undefined;
+}
 
 interface IMenuLateralProps {
     children: React.ReactNode
-}
+};
 
+
+
+const ListItemLink: React.FC<IListItemLinkProps> = ({ to, icon, label, onClick }) => {
+    const navigate = useNavigate();
+
+    const resolvedPath = useResolvedPath(to);
+    const match = useMatch({ path: resolvedPath.pathname, end: false });
+
+    const handleClick = () => {
+        navigate(to);
+        onClick?.();
+    };
+
+    return (
+        <ListItemButton selected={!!match} onClick={handleClick}>
+            <ListItemIcon>
+                {icon}
+            </ListItemIcon>
+            <ListItemText primary={label} />
+        </ListItemButton>
+
+    )
+
+}
 
 export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
     const theme = useTheme();
@@ -26,7 +56,8 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
                     <Box width="100%" height={theme.spacing(20)} display="flex" alignItems="center" justifyContent="center" bgcolor='#2E8B57'>
                         <Avatar
                             sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
-                            src="https://static.wixstatic.com/media/97349f_a4abdfe6f4384c2884ae2228ad3528b9~mv2.png/v1/fill/w_60,h_60,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Cabe%C3%A7alhoSIte_fw.png"
+                            src='./images/logo.png'
+                        // src="https://static.wixstatic.com/media/97349f_a4abdfe6f4384c2884ae2228ad3528b9~mv2.png/v1/fill/w_60,h_60,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Cabe%C3%A7alhoSIte_fw.png"
                         />
                     </Box>
 
@@ -34,13 +65,29 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
 
                     <Box flex={1} bgcolor='#F0FFF0'>
                         <List component="nav">
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <HomeIcon sx={{ color: '#2E8B57' }} />
-                                </ListItemIcon>
-                                <ListItemText primary="Página inicial" />
-                            </ListItemButton>
-                            <ListItemButton>
+                            <ListItemLink
+                                icon={<HomeIcon />}
+                                to='/pagina-inicial'
+                                label='Página inicial'
+                                onClick={smDown ? toggleDrawerOpen : undefined}
+                            />
+                        </List>
+                        <ListItemLink
+                            icon={<SettingsIcon />}
+                            to='/configuracao'
+                            label='Configuração'
+                            onClick={smDown ? toggleDrawerOpen : undefined}
+                        />
+                        <ListItemLink
+                            icon={<SyncIcon />}
+                            to='/sincronizacao'
+                            label='Sincronização'
+                            onClick={smDown ? toggleDrawerOpen : undefined}
+                        />
+
+                        {/*
+                        <HomeIcon 
+                         <ListItemButton>
                                 <ListItemIcon>
                                     <SettingsIcon sx={{ color: '#2E8B57' }} />
                                 </ListItemIcon>
@@ -51,8 +98,9 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
                                     <SyncIcon sx={{ color: '#2E8B57' }} />
                                 </ListItemIcon>
                                 <ListItemText primary="Sincronização" />
-                            </ListItemButton>
-                        </List>
+                            </ListItemButton> */}
+
+
                     </Box>
 
                 </Box>
