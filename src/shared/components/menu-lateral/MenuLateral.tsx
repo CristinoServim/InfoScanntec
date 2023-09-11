@@ -1,11 +1,14 @@
-import { Avatar, Divider, Drawer, Icon, IconButton, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from '@mui/material';
+import { Avatar, Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
+import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
+
+//icones
 import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SyncIcon from '@mui/icons-material/Sync';
-import { useDrawerContext } from '../../contexts';
-import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
 
+import { useAppThemeContext, useDrawerContext } from '../../contexts';
 interface IListItemLinkProps {
     to: string;
     icon: any;
@@ -46,7 +49,8 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext();
+    const { isDrawerOpen, drawerOptions, toggleDrawerOpen } = useDrawerContext();
+    const { toggleTheme } = useAppThemeContext();
 
     return (
         <>
@@ -63,45 +67,42 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
 
                     <Divider />
 
-                    <Box flex={1} bgcolor='#F0FFF0'>
+                    <Box flex={1} >
                         <List component="nav">
-                            <ListItemLink
-                                icon={<HomeIcon />}
-                                to='/pagina-inicial'
-                                label='Página inicial'
-                                onClick={smDown ? toggleDrawerOpen : undefined}
-                            />
+                            {drawerOptions.map(drawerOption => (
+                                <ListItemLink
+                                    to={drawerOption.path}
+                                    key={drawerOption.path}
+                                    icon={<HomeIcon />}
+                                    label={drawerOption.label}
+                                    onClick={smDown ? toggleDrawerOpen : undefined}
+                                />
+                            ))}
                         </List>
-                        <ListItemLink
-                            icon={<SettingsIcon />}
-                            to='/configuracao'
-                            label='Configuração'
-                            onClick={smDown ? toggleDrawerOpen : undefined}
-                        />
-                        <ListItemLink
-                            icon={<SyncIcon />}
-                            to='/sincronizacao'
-                            label='Sincronização'
-                            onClick={smDown ? toggleDrawerOpen : undefined}
-                        />
-
-                        {/*
-                        <HomeIcon 
-                         <ListItemButton>
-                                <ListItemIcon>
-                                    <SettingsIcon sx={{ color: '#2E8B57' }} />
-                                </ListItemIcon>
-                                <ListItemText primary="Configuração" />
-                            </ListItemButton>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <SyncIcon sx={{ color: '#2E8B57' }} />
-                                </ListItemIcon>
-                                <ListItemText primary="Sincronização" />
-                            </ListItemButton> */}
-
-
+                        <List component="nav">
+                            {drawerOptions.map(drawerOption => (
+                                <ListItemLink
+                                    to={drawerOption.path}
+                                    key={drawerOption.path}
+                                    icon={<SettingsIcon />}
+                                    label='Configuração'
+                                    onClick={smDown ? toggleDrawerOpen : undefined}
+                                />
+                            ))}
+                        </List>
                     </Box>
+
+                    <Box>
+                        <List component="nav">
+                            <ListItemButton onClick={toggleTheme}>
+                                <ListItemIcon>
+                                    <ColorLensIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Alternar tema" />
+                            </ListItemButton>
+                        </List>
+                    </Box>
+
 
                 </Box>
             </Drawer>
