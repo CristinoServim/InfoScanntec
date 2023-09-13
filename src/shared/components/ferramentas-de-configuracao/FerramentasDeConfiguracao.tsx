@@ -147,7 +147,7 @@ export const FerramentasDeConfiguracao = () => {
 
         console.log(data)
 
-        const res = await axios.post("http://192.168.253.94:5001/v1-ibra/configurascanntec", data)
+        const res = await axios.post("https://192.168.253.94:5001/v1-ibra/configurascanntec", data)
 
         if(res.status === 200) {
             console.log("MANDOU PRO BACKEND")
