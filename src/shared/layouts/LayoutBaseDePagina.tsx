@@ -34,7 +34,7 @@ export const LayoutBaseDePagina: React.FC<ILayoutBaseDePaginaProps> = ({ childre
           overflow="hidden"
           whiteSpace="nowrap"
           textOverflow="ellipses"
-          variant={smDown ? 'h5' : mdDown ? 'h4' : 'h3'}
+          variant={smDown ? 'h6' : mdDown ? 'h5' : 'h4'}
         >
           {titulo}
         </Typography>
@@ -44,7 +44,10 @@ export const LayoutBaseDePagina: React.FC<ILayoutBaseDePaginaProps> = ({ childre
         <Box>
           {barraDeFerramentas}
         </Box>
+
       )}
+
+
 
       <Box flex={1} overflow="auto">
         {children}

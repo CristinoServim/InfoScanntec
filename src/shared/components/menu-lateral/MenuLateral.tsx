@@ -1,4 +1,4 @@
-import { Avatar, Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from '@mui/material';
+import { Icon, Avatar, Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 
@@ -36,7 +36,7 @@ const ListItemLink: React.FC<IListItemLinkProps> = ({ to, icon, label, onClick }
     return (
         <ListItemButton selected={!!match} onClick={handleClick}>
             <ListItemIcon>
-                {icon}
+                <Icon>{icon}</Icon>
             </ListItemIcon>
             <ListItemText primary={label} />
         </ListItemButton>
@@ -73,23 +73,13 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
                                 <ListItemLink
                                     to={drawerOption.path}
                                     key={drawerOption.path}
-                                    icon={<HomeIcon />}
+                                    icon={drawerOption.icon}
                                     label={drawerOption.label}
                                     onClick={smDown ? toggleDrawerOpen : undefined}
                                 />
                             ))}
                         </List>
-                        <List component="nav">
-                            {drawerOptions.map(drawerOption => (
-                                <ListItemLink
-                                    to={drawerOption.path}
-                                    key={drawerOption.path}
-                                    icon={<SettingsIcon />}
-                                    label='Configuração'
-                                    onClick={smDown ? toggleDrawerOpen : undefined}
-                                />
-                            ))}
-                        </List>
+
                     </Box>
 
                     <Box>
