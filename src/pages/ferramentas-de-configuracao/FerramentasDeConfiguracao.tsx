@@ -147,7 +147,7 @@ export const FerramentasDeConfiguracao = () => {
 
         console.log(data)
 
-        const res = await axios.post("https://192.168.253.94:5001/v1-ibra/configurascanntec", data)
+        const res = await axios.post("https://192.168.253.94:3003/v1-ibra/configurascanntec", data)
 
         if (res.status === 200) {
             console.log("MANDOU PRO BACKEND")
@@ -158,13 +158,13 @@ export const FerramentasDeConfiguracao = () => {
     }
 
     return (
-        
+
         <Grid container direction={'row'}>
             <form onSubmit={handleSubmit(onSubmit)} id='form-principal'>
-                
 
-                <Grid item xs={12} md={12} lg={12} xl={12} sx={{ }}>
-                    
+
+                <Grid item xs={12} md={12} lg={12} xl={12} sx={{}}>
+
 
                     <Card sx={{ margin: 2 }}>
                         <CardContent>
@@ -198,11 +198,14 @@ export const FerramentasDeConfiguracao = () => {
                             {lojas.map((loja, index) => (
                                 <Box key={index} sx={{ marginBottom: 3 }}>
                                     <Grid container direction='row' spacing={1.5}>
-                                        <Grid item xs={12} md={4.75} lg={4.75} xl={4.75}>
+                                        <Grid item xs={12} md={4.75} lg={4.75} xl={3.75}>
                                             <TxtFieldForm label='Nome' name={`lojaNome${index + 1}`} control={control} />
                                         </Grid>
-                                        <Grid item xs={12} md={4.75} lg={4.75} xl={4.75}>
+                                        <Grid item xs={12} md={4.75} lg={4.75} xl={2.75}>
                                             <TxtFieldForm label='Código' name={`lojaCodigo${index + 1}`} control={control} />
+                                        </Grid>
+                                        <Grid item xs={12} md={4.75} lg={4.75} xl={2.75}>
+                                            <TxtFieldForm label='Código Scanntech' name={`lojaCodigoScanntech${index + 1}`} control={control} />
                                         </Grid>
                                         <Grid item xs={12} md={2.5} lg={2.5} xl={2.5} sx={{ marginTop: '3px' }}>
                                             <ButtonGeneric title={'Excluir'} typeStyle='excluir' fullWidth type='button' onClick={() => setLojas((lojas) => lojas.filter((_, i) => i !== index))} />
