@@ -22,18 +22,23 @@ interface IFerramentasDeConfiguracaoForm {
 
     lojaNome1: string | null,
     lojaCodigo1: number,
+    lojaCodigoScanntech1: number,
 
     lojaNome2: string | null,
     lojaCodigo2: number,
+    lojaCodigoScanntech2: number,
 
     lojaNome3: string | null,
     lojaCodigo3: number,
+    lojaCodigoScanntech3: number,
 
     lojaNome4: string | null,
     lojaCodigo4: number,
+    lojaCodigoScanntech4: number,
 
     lojaNome5: string | null,
     lojaCodigo5: number,
+    lojaCodigoScanntech5: number,
 
     lojasAtivas: any
 }
@@ -86,10 +91,20 @@ export const FerramentasDeConfiguracao = () => {
             .required('*Campo obrigatório')
             .positive('O campo deve ser um número positivo')
             .integer('O campo deve ser um número inteiro'),
+        lojaCodigoScanntech1: Yup.number()
+            .typeError('O campo deve ser um número')
+            .required('*Campo obrigatório')
+            .positive('O campo deve ser um número positivo')
+            .integer('O campo deve ser um número inteiro'),
 
         lojaNome2: Yup.string()
             .nullable(),
         lojaCodigo2: Yup.number()
+            .typeError('O campo deve ser um número')
+            .nullable()
+            .positive('O campo deve ser um número positivo')
+            .integer('O campo deve ser um número inteiro'),
+        lojaCodigoScanntech2: Yup.number()
             .typeError('O campo deve ser um número')
             .nullable()
             .positive('O campo deve ser um número positivo')
@@ -102,6 +117,11 @@ export const FerramentasDeConfiguracao = () => {
             .nullable()
             .positive('O campo deve ser um número positivo')
             .integer('O campo deve ser um número inteiro'),
+        lojaCodigoScanntech3: Yup.number()
+            .typeError('O campo deve ser um número')
+            .nullable()
+            .positive('O campo deve ser um número positivo')
+            .integer('O campo deve ser um número inteiro'),
 
         lojaNome4: Yup.string()
             .nullable(),
@@ -110,10 +130,20 @@ export const FerramentasDeConfiguracao = () => {
             .nullable()
             .positive('O campo deve ser um número positivo')
             .integer('O campo deve ser um número inteiro'),
+        lojaCodigoScanntech4: Yup.number()
+            .typeError('O campo deve ser um número')
+            .nullable()
+            .positive('O campo deve ser um número positivo')
+            .integer('O campo deve ser um número inteiro'),
 
         lojaNome5: Yup.string()
             .nullable(),
         lojaCodigo5: Yup.number()
+            .typeError('O campo deve ser um número')
+            .nullable()
+            .positive('O campo deve ser um número positivo')
+            .integer('O campo deve ser um número inteiro'),
+        lojaCodigoScanntech5: Yup.number()
             .typeError('O campo deve ser um número')
             .nullable()
             .positive('O campo deve ser um número positivo')
@@ -135,27 +165,51 @@ export const FerramentasDeConfiguracao = () => {
     });
 
     const onSubmit = async (data: any) => {
-        const lojaCodigos = [
-            data.lojaCodigo1,
-            data.lojaCodigo2,
-            data.lojaCodigo3,
-            data.lojaCodigo4,
-            data.lojaCodigo5
-        ].filter((codigo) => codigo !== undefined);
-
-        data.lojasAtivas = lojaCodigos;
-
-        console.log(data)
-
-        const res = await axios.post("https://192.168.253.94:3003/v1-ibra/configurascanntec", data)
-
-        if (res.status === 200) {
-            console.log("MANDOU PRO BACKEND")
+        const lojasAtivas = [];
+    
+        for (let i = 1; i <= 5; i++) {
+            const lojaCodigo = data[`lojaCodigo${i}`];
+            const lojaCodigoScanntech = data[`lojaCodigoScanntech${i}`];
+    
+            if (lojaCodigo !== undefined && lojaCodigoScanntech !== undefined) {
+                lojasAtivas.push({
+                    lojaCodigo,
+                    lojaCodigoScanntech
+                });
+            }
+            else{
+                console.log(`Loja ${i} não foi inserida em lojas ativas, pois um dos códigos não foi informado!` )
+            }
         }
-        else {
-            console.log("DEU RUIM ENVIAR PRO BACKEND")
+    
+        data.lojasAtivas = lojasAtivas;
+    
+        console.log(data);
+    
+        try {
+            const res = await axios.post("https://192.168.253.94:3003/v1-ibra/configurascanntec", data);
+    
+            if (res.status === 200) {
+                console.log("MANDOU PRO BACKEND");
+            } else {
+                console.log("DEU RUIM ENVIAR PRO BACKEND");
+            }
+        } catch (error) {
+            console.error("Erro ao enviar para o servidor:", error);
+        }
+    };
+
+
+    const excluirLoja = (index: number) => {
+        console.log(index)
+        if(index === 0){
+            console.log("Exclusão falhou, pois é obrigatório o envio de pelomenos uma loja!")
+        }
+        else{
+            setLojas((lojas) => lojas.filter((_, i) => i !== index))
         }
     }
+    
 
     return (
 
@@ -198,24 +252,24 @@ export const FerramentasDeConfiguracao = () => {
                             {lojas.map((loja, index) => (
                                 <Box key={index} sx={{ marginBottom: 3 }}>
                                     <Grid container direction='row' spacing={1.5}>
-                                        <Grid item xs={12} md={4.75} lg={4.75} xl={3.75}>
+                                        <Grid item xs={12} md={4} lg={3.4} xl={3.4}>
                                             <TxtFieldForm label='Nome' name={`lojaNome${index + 1}`} control={control} />
                                         </Grid>
-                                        <Grid item xs={12} md={4.75} lg={4.75} xl={2.75}>
+                                        <Grid item xs={12} md={4} lg={3.3} xl={3.3}>
                                             <TxtFieldForm label='Código' name={`lojaCodigo${index + 1}`} control={control} />
                                         </Grid>
-                                        <Grid item xs={12} md={4.75} lg={4.75} xl={2.75}>
+                                        <Grid item xs={12} md={4} lg={3.3} xl={3.3}>
                                             <TxtFieldForm label='Código Scanntech' name={`lojaCodigoScanntech${index + 1}`} control={control} />
                                         </Grid>
-                                        <Grid item xs={12} md={2.5} lg={2.5} xl={2.5} sx={{ marginTop: '3px' }}>
-                                            <ButtonGeneric title={'Excluir'} typeStyle='excluir' fullWidth type='button' onClick={() => setLojas((lojas) => lojas.filter((_, i) => i !== index))} />
+                                        <Grid item xs={12} md={12} lg={2} xl={2} sx={{ marginTop: '3px' }}>
+                                            <ButtonGeneric title={'Excluir'} typeStyle='excluir' fullWidth type='button' onClick={() => excluirLoja(index)} />
                                         </Grid>
                                     </Grid>
                                 </Box>
                             ))}
 
                             {lojas.length < 5 &&
-                                <ButtonGeneric title={'Adicionar loja'} typeStyle='adicionar' onClick={(novaLoja: Loja) => setLojas([...lojas, novaLoja])} type='button' />
+                                <ButtonGeneric title={'Adicionar loja'} typeStyle='adicionar' onClick={(novaLoja: Loja) => setLojas([...lojas, novaLoja])} type='button' fullWidth/>
                             }
                         </CardContent>
                     </Card>
