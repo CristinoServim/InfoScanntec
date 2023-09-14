@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-
 import { useDrawerContext } from '../shared/contexts';
-import { Dashboard } from '../pages';
-import { Login } from '../shared/components';
+import { FerramentasDeConfiguracao, Login } from '../shared/components';
 
 export const AppRoutes = () => {
   const { setDrawerOptions } = useDrawerContext();
@@ -26,7 +24,7 @@ export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/pagina-inicial" element={<Login />} />
-      <Route path="/configuracao" element={<Dashboard />} />
+      <Route path="/configuracao" element={<FerramentasDeConfiguracao />} />
 
       <Route path="*" element={<Navigate to="/pagina-inicial" />} />
     </Routes>
