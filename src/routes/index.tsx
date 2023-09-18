@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useDrawerContext } from '../shared/contexts';
+import { useDrawerContext, useLoginContext } from '../shared/contexts';
 import { FerramentasDeConfiguracao, Login } from '../shared/components';
 
 export const AppRoutes = () => {
   const { setDrawerOptions } = useDrawerContext();
+  const { setLoginOptions } = useLoginContext();
 
   useEffect(() => {
     setDrawerOptions([
@@ -19,6 +20,7 @@ export const AppRoutes = () => {
         label: 'Configuração',
       },
     ]);
+
   }, []);
 
   return (

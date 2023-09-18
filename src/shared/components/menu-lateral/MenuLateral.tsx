@@ -3,9 +3,6 @@ import { Box } from '@mui/system';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 
 //icones
-import HomeIcon from '@mui/icons-material/Home';
-import SettingsIcon from '@mui/icons-material/Settings';
-import SyncIcon from '@mui/icons-material/Sync';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
 
 import { useAppThemeContext, useDrawerContext } from '../../contexts';

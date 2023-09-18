@@ -166,29 +166,29 @@ export const FerramentasDeConfiguracao = () => {
 
     const onSubmit = async (data: any) => {
         const lojasAtivas = [];
-    
+
         for (let i = 1; i <= 5; i++) {
             const lojaCodigo = data[`lojaCodigo${i}`];
             const lojaCodigoScanntech = data[`lojaCodigoScanntech${i}`];
-    
+
             if (lojaCodigo !== undefined && lojaCodigoScanntech !== undefined) {
                 lojasAtivas.push({
                     lojaCodigo,
                     lojaCodigoScanntech
                 });
             }
-            else{
-                console.log(`Loja ${i} não foi inserida em lojas ativas, pois um dos códigos não foi informado!` )
+            else {
+                console.log(`Loja ${i} não foi inserida em lojas ativas, pois um dos códigos não foi informado!`)
             }
         }
-    
+
         data.lojasAtivas = lojasAtivas;
-    
+
         console.log(data);
-    
+
         try {
-            const res = await axios.post("https://192.168.253.94:3003/v1-ibra/configurascanntec", data);
-    
+            const res = await axios.post("http://localhost:5001/v1-ibra/configurascanntec", data);
+
             if (res.status === 200) {
                 console.log("MANDOU PRO BACKEND");
             } else {
@@ -202,14 +202,14 @@ export const FerramentasDeConfiguracao = () => {
 
     const excluirLoja = (index: number) => {
         console.log(index)
-        if(index === 0){
+        if (index === 0) {
             console.log("Exclusão falhou, pois é obrigatório o envio de pelomenos uma loja!")
         }
-        else{
+        else {
             setLojas((lojas) => lojas.filter((_, i) => i !== index))
         }
     }
-    
+
 
     return (
 
@@ -219,6 +219,8 @@ export const FerramentasDeConfiguracao = () => {
 
                 <Grid item xs={12} md={12} lg={12} xl={12} sx={{}}>
 
+
+                    <Typography color='primary' variant='h4' sx={{ padding: 3, marginBottom: 3, }}>Configuração</Typography>
 
                     <Card sx={{ margin: 2 }}>
                         <CardContent>
@@ -269,7 +271,7 @@ export const FerramentasDeConfiguracao = () => {
                             ))}
 
                             {lojas.length < 5 &&
-                                <ButtonGeneric title={'Adicionar loja'} typeStyle='adicionar' onClick={(novaLoja: Loja) => setLojas([...lojas, novaLoja])} type='button' fullWidth/>
+                                <ButtonGeneric title={'Adicionar loja'} typeStyle='adicionar' onClick={(novaLoja: Loja) => setLojas([...lojas, novaLoja])} type='button' fullWidth />
                             }
                         </CardContent>
                     </Card>

@@ -9,7 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import AddIcon from '@mui/icons-material/Add';
-import { VerdeEscuro, GoldPadrao, AmareloIntermediario, AzulPadrao, VermelhoPadrao, AmareloClaro } from '../../../assets/colors/CoresPadroes';
+import { VerdeEscuro, GoldPadrao, AmareloIntermediario, AzulPadrao, VermelhoPadrao, AmareloClaro, VerdeClaro } from '../../../assets/colors/CoresPadroes';
 
 interface IButtonGeneric {
     title: any
@@ -138,9 +138,9 @@ export const ButtonGeneric = (props: IButtonGeneric) => {
         case 'login':
             return (
                 <ButtonStyled
-                    backgroundcolor={GoldPadrao}
-                    backgroundcolorhover={AmareloIntermediario}
-                    colorprop={VerdeEscuro}
+                    backgroundcolor={VerdeEscuro}
+                    backgroundcolorhover={VerdeClaro}
+                    colorprop={'white'}
                     fullWidth={fullWidth}
                     height={height}
                     disabled={disabled || this}

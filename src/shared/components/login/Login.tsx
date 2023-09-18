@@ -1,89 +1,127 @@
 import { useState } from 'react';
-import { Box, Button, Card, CardActions, CardContent, CircularProgress, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, CircularProgress, Grid, Icon, List, ListItemButton, ListItemIcon, ListItemText, TextField, Typography, useMediaQuery, useTheme } from '@mui/material';
 
 import { saveAs } from 'file-saver';
+import axios from 'axios';
+import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
+import { useLoginContext } from '../../contexts';
+import { ButtonGeneric } from '../button/ButtonGeneric';
 
+import { useForm } from 'react-hook-form';
+
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { TxtFieldForm } from '../textfield/TextFieldForm';
+
+
+
+
+interface IListItemLinkProps {
+    to: string;
+    icon: any;
+    label: string;
+    onClick: (() => void) | undefined;
+}
 
 interface ILoginProps {
-}
+
+};
+
+
 export const Login: React.FC<ILoginProps> = ({ }) => {
+    const theme = useTheme();
 
-    const [isLoading, setIsLoading] = useState(false);
+    const { toggleloginOpen } = useLoginContext();
 
-    const [passwordError, setPasswordError] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [password, setPassword] = useState('');
-    const [user, setEmail] = useState('');
-    const apiUrl = 'cristino';
-    const apiKey = '123456'
+    const onSubmit = async (data: any) => {
+        const lojasAtivas = [];
+
+        try {
+            data = { "usuario": "cristino" }
+            const res = await axios.post("http://localhost:5001/v1-ibra/loginscanntec", data);
+
+            if (res.status === 200) {
+                console.log("MANDOU PRO BACKEND", res.data);
+            } else {
+                console.log("DEU RUIM ENVIAR PRO BACKEND");
+            }
+
+            for (let i = 1; i <= 5; i++) {
+                const lojaCodigo = res.data[`lojaCodigo${i}`];
+                const lojaCodigoScanntech = data[`lojaCodigoScanntech${i}`];
+
+                if (lojaCodigo !== undefined && lojaCodigoScanntech !== undefined) {
+                    lojasAtivas.push({
+                        lojaCodigo,
+                        lojaCodigoScanntech
+                    });
+                }
+                else {
+                    console.log(`Loja ${i} não foi inserida em lojas ativas, pois um dos códigos não foi informado!`)
+                }
+            }
+
+            data.lojasAtivas = lojasAtivas;
+            console.log(res.data)
+
+        } catch (error) {
+            console.error("Erro ao enviar para o servidor:", error);
+        }
 
 
-    const handleSubmit = (event: any) => {
 
-    }
+    };
+    const validationSchema = Yup.object({
+
+
+        usuario: Yup.string()
+            .required('*Campo obrigatório'),
+
+        senha: Yup.string()
+            .required('*Campo obrigatório'),
+
+
+    });
+
+    const { handleSubmit, control } = useForm({
+        resolver: yupResolver(validationSchema),
+        mode: "onChange"
+    });
 
     return (
-        <Box height='100vh' display='flex' alignItems='center' justifyContent='center'>
+        <form onSubmit={handleSubmit(onSubmit)} id='form-principal'>
+            <Grid container direction={'row'}>
+                <Grid item xs={12} md={12} lg={12} xl={12} sx={{}}>
 
-            <Card sx={{ height: '70vh' }}>
-                <CardContent>
-                    <Box display='flex' flexDirection='column' gap={2} width={250}>
-                        <Typography color='primary' variant='h5' align='center'>Login</Typography>
+                    <Box height='100vh' display='flex' alignItems='center' justifyContent='center'>
+                        <Card sx={{ width: '400px' }}>
+                            <CardContent>
+                                <Grid container direction='row' spacing={2}>
+                                    <Grid item xs={12} md={12} lg={12} xl={12}>
+                                        <Typography color='primary' variant='h5' align='center'>Login</Typography>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={12} xl={12}>
+                                        <TxtFieldForm label='Usuário' name='usuario' control={control} />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={12} xl={12}>
+                                        <TxtFieldForm label='Senha' name='senha' control={control} type='password' />
+                                    </Grid>
 
-                        <TextField
-                            fullWidth
-                            type='text'
-                            label='Usuário'
-                            value={user}
-                            disabled={isLoading}
-                            error={!!emailError}
-                            helperText={emailError}
-                            onKeyDown={() => setEmailError('')}
-                            onChange={e => setEmail(e.target.value)}
-                        />
 
-                        <TextField
-                            fullWidth
-                            label='Senha'
-                            type='password'
-                            value={password}
-                            disabled={isLoading}
-                            error={!!passwordError}
-                            helperText={passwordError}
-                            onKeyDown={() => setPasswordError('')}
-                            onChange={e => setPassword(e.target.value)}
-                        />
+                                    <Grid item xs={12} md={12} lg={12} xl={12}>
+                                        <ButtonGeneric fullWidth title={"Entrar"} typeStyle="login" form={'form-principal'} />
+                                    </Grid>
+                                </Grid>
+                            </CardContent>
+
+
+                        </Card>
                     </Box>
-                </CardContent>
-                <CardActions>
-                    <Box width='100%' display='flex' justifyContent='center'>
 
-                        <Button
-                            variant='contained'
-                            disabled={isLoading}
-                            onClick={handleSubmit}
-                            endIcon={isLoading ? <CircularProgress variant='indeterminate' color='inherit' size={20} /> : undefined}
-                        >
-                            Entrar
-                        </Button>
+                </Grid>
 
-                    </Box>
-                </CardActions>
-                <CardActions>
-                    <Box width='100%' display='flex' justifyContent='center'>
+            </Grid>
 
-                        <Button
-                            variant='contained'
-                            disabled={isLoading}
-                            onClick={handleSubmit}
-                            endIcon={isLoading ? <CircularProgress variant='indeterminate' color='inherit' size={20} /> : undefined}
-                        >
-                            Registrar
-                        </Button>
-
-                    </Box>
-                </CardActions>
-            </Card>
-        </Box>
+        </form>
     );
 };
