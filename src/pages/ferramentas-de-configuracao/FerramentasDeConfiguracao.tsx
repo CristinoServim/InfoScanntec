@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
@@ -6,6 +6,7 @@ import { TxtFieldForm } from '../../shared/components/textfield/TextFieldForm';
 import { ButtonGeneric } from '../../shared/components/button/ButtonGeneric';
 import { yupResolver } from '@hookform/resolvers/yup'; // Certifique-se de importar desta forma
 import axios from 'axios';
+import { useAuth } from '../../shared/contexts/AuthContext';
 
 
 interface IFerramentasDeConfiguracaoForm {
@@ -158,7 +159,7 @@ export const FerramentasDeConfiguracao = () => {
     });
 
 
-    const { handleSubmit, control } = useForm({
+    const { handleSubmit, control, reset, setValue } = useForm({
         // defaultValues: {senha: ''},
         resolver: yupResolver(validationSchema),
         mode: "onChange"
@@ -168,14 +169,20 @@ export const FerramentasDeConfiguracao = () => {
         const lojasAtivas = [];
 
         for (let i = 1; i <= 5; i++) {
+            const lojaNome = data[`lojaNome${i}`];
             const lojaCodigo = data[`lojaCodigo${i}`];
             const lojaCodigoScanntech = data[`lojaCodigoScanntech${i}`];
 
             if (lojaCodigo !== undefined && lojaCodigoScanntech !== undefined) {
                 lojasAtivas.push({
+                    lojaNome,
                     lojaCodigo,
                     lojaCodigoScanntech
                 });
+                delete data[`lojaCodigo${i}`]
+                delete data[`lojaCodigoScanntech${i}`]
+                delete data[`lojaNome${i}`]
+
             }
             else {
                 console.log(`Loja ${i} não foi inserida em lojas ativas, pois um dos códigos não foi informado!`)
@@ -210,6 +217,18 @@ export const FerramentasDeConfiguracao = () => {
         }
     }
 
+    const { usuarioLogado } = useAuth();
+    const usuario = JSON.stringify(usuarioLogado, null, 2)
+
+    console.log("USUARIO : " + usuario)
+
+    useEffect(() => {
+        if (usuarioLogado !== null) {
+            // setValue('empresa', usuarioLogado.empresa)
+            // setValue('local', usuarioLogado.local)
+            reset(usuarioLogado)
+        }
+    }, [])
 
     return (
 

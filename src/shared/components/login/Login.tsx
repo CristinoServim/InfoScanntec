@@ -12,8 +12,7 @@ import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TxtFieldForm } from '../textfield/TextFieldForm';
-
-
+import { useAuth } from '../../contexts/AuthContext';
 
 
 interface IListItemLinkProps {
@@ -24,14 +23,15 @@ interface IListItemLinkProps {
 }
 
 interface ILoginProps {
-
 };
 
 
 export const Login: React.FC<ILoginProps> = ({ }) => {
     const theme = useTheme();
 
-    const { toggleloginOpen } = useLoginContext();
+    const { usuarioLogado, gravarUsuario, limparUsuario } = useAuth();
+
+    console.log(usuarioLogado)
 
     const onSubmit = async (data: any) => {
         const lojasAtivas = [];
@@ -41,28 +41,26 @@ export const Login: React.FC<ILoginProps> = ({ }) => {
             const res = await axios.post("http://localhost:5001/v1-ibra/loginscanntec", data);
 
             if (res.status === 200) {
-                console.log("MANDOU PRO BACKEND", res.data);
+                console.log("LOGOU", res.data);
+                gravarUsuario(res.data)
             } else {
                 console.log("DEU RUIM ENVIAR PRO BACKEND");
             }
 
-            for (let i = 1; i <= 5; i++) {
-                const lojaCodigo = res.data[`lojaCodigo${i}`];
-                const lojaCodigoScanntech = data[`lojaCodigoScanntech${i}`];
+            // for (let i = 1; i <= 5; i++) {
+            //     const lojaCodigo = res.data[`lojaCodigo${i}`];
+            //     const lojaCodigoScanntech = data[`lojaCodigoScanntech${i}`];
 
-                if (lojaCodigo !== undefined && lojaCodigoScanntech !== undefined) {
-                    lojasAtivas.push({
-                        lojaCodigo,
-                        lojaCodigoScanntech
-                    });
-                }
-                else {
-                    console.log(`Loja ${i} não foi inserida em lojas ativas, pois um dos códigos não foi informado!`)
-                }
-            }
-
-            data.lojasAtivas = lojasAtivas;
-            console.log(res.data)
+            //     if (lojaCodigo !== undefined && lojaCodigoScanntech !== undefined) {
+            //         lojasAtivas.push({
+            //             lojaCodigo,
+            //             lojaCodigoScanntech
+            //         });
+            //     }
+            //     else {
+            //         console.log(`Loja ${i} não foi inserida em lojas ativas, pois um dos códigos não foi informado!`)
+            //     }
+            // }
 
         } catch (error) {
             console.error("Erro ao enviar para o servidor:", error);
@@ -72,15 +70,11 @@ export const Login: React.FC<ILoginProps> = ({ }) => {
 
     };
     const validationSchema = Yup.object({
-
-
         usuario: Yup.string()
             .required('*Campo obrigatório'),
 
         senha: Yup.string()
             .required('*Campo obrigatório'),
-
-
     });
 
     const { handleSubmit, control } = useForm({

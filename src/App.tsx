@@ -2,13 +2,14 @@ import { BrowserRouter } from "react-router-dom";
 import { AppRoutes } from "./routes";
 import { AppThemeProvider, DrawerProvider, LoginProvider } from "./shared/contexts";
 import { MenuLateral } from "./shared/components";
+import { AuthProvider } from "./shared/contexts/AuthContext";
 
 function App() {
   return (
     <AppThemeProvider>
 
       <DrawerProvider>
-        <LoginProvider>
+        <AuthProvider>
 
           <BrowserRouter>
 
@@ -18,7 +19,7 @@ function App() {
 
           </BrowserRouter>
 
-        </LoginProvider>
+        </AuthProvider>
       </DrawerProvider>
 
     </AppThemeProvider>

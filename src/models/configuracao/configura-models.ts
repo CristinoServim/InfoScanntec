@@ -1,5 +1,3 @@
-
-
 export class ConfiguraModels {
     empresa: number
     local: number
