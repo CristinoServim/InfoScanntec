@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
@@ -7,6 +6,7 @@ import { ButtonGeneric } from '../../shared/components/button/ButtonGeneric';
 import { yupResolver } from '@hookform/resolvers/yup'; // Certifique-se de importar desta forma
 import axios from 'axios';
 import { useAuth } from '../../shared/contexts/AuthContext';
+import { useState, useEffect } from 'react';
 
 
 interface IFerramentasDeConfiguracaoForm {
@@ -44,6 +44,7 @@ interface IFerramentasDeConfiguracaoForm {
     lojasAtivas: any
 }
 
+
 interface Loja {
     nome: string,
     codigo: number
@@ -54,7 +55,7 @@ export const FerramentasDeConfiguracao = () => {
 
     const [error, setError] = useState<boolean>(false)
 
-    const [lojas, setLojas] = useState<Loja[]>([{ nome: '', codigo: 0, }])
+    const [lojas, setLojas] = useState([{ nome: '', codigo: 0, }])
 
     const validationSchema = Yup.object({
 
@@ -199,10 +200,10 @@ export const FerramentasDeConfiguracao = () => {
                     'Content-Type': 'application/json'
                 }
             };
-            const res = await axios.post("http://localhost:5001/v1-ibra/configurascanntec", data);
+            const res = await axios.post("http://192.168.253.94:5001/v1-ibra/loginscanntec", data);
 
             if (res.status === 200) {
-                console.log("MANDOU PRO BACKEND");
+                console.log("GRAVOU");
             } else {
                 console.log("DEU RUIM ENVIAR PRO BACKEND");
             }
@@ -223,17 +224,54 @@ export const FerramentasDeConfiguracao = () => {
     }
 
     const { usuarioLogado } = useAuth();
-    const usuario = JSON.stringify(usuarioLogado, null, 2)
-
-    console.log("USUARIO : " + usuario)
 
     useEffect(() => {
         if (usuarioLogado !== null) {
+            console.log(usuarioLogado)
+            
             // setValue('empresa', usuarioLogado.empresa)
             // setValue('local', usuarioLogado.local)
             reset(usuarioLogado)
+            setLojas(usuarioLogado.lojasAtivas)
+
+            const campoMapeamento: any = {
+                0: {
+                    nome: "lojaNome1",
+                    codigo: "lojaCodigo1",
+                    codigoscanntec: "lojaCodigoScanntech1"
+                },
+                1: {
+                    nome: "lojaNome2",
+                    codigo: "lojaCodigo2",
+                    codigoscanntec: "lojaCodigoScanntech2"
+                },
+                2: {
+                    nome: "lojaNome3",
+                    codigo: "lojaCodigo3",
+                    codigoscanntec: "lojaCodigoScanntech3"
+                },
+                3: {
+                    nome: "lojaNome4",
+                    codigo: "lojaCodigo4",
+                    codigoscanntec: "lojaCodigoScanntech4"
+                },
+                4: {
+                    nome: "lojaNome5",
+                    codigo: "lojaCodigo5",
+                    codigoscanntec: "lojaCodigoScanntech5"
+                },
+              };
+              
+              usuarioLogado.lojasAtivas.forEach((loja: any, index: number) => {
+                const campos = campoMapeamento[index];
+                if (campos) {
+                  setValue(campos.nome, loja.lojaNome);
+                  setValue(campos.codigo, loja.lojaCodigo);
+                  setValue(campos.codigoscanntec, loja.lojaCodigoScanntech);
+                }
+              });
         }
-    }, [])
+    }, [reset, setValue, usuarioLogado])
 
     return (
 

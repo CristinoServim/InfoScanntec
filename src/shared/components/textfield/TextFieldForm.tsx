@@ -34,16 +34,6 @@ export const TxtFieldForm = (props: ITxtFieldForm) => {
         event.preventDefault();
     };
 
-    function tratarValue(value: any) {
-        if (value) {
-            if (type) {
-            } else {
-                return value;
-            }
-        } else {
-            return ""
-        }
-    }
 
     return (
         <Controller
@@ -61,7 +51,7 @@ export const TxtFieldForm = (props: ITxtFieldForm) => {
                             style: { textAlign: textAlign || 'left', fontSize: '0.95rem' },
                         }}
                         InputLabelProps={{ style: { color: error ? VermelhoPadrao : isRef ? AzulPadrao : VerdeIntermediario, fontSize: '1.15rem' } }}
-                        value={type ? tratarValue(value) : value || ""}
+                        value={value ||  ""}
                         type={type || 'text'}
                         label={label}
                         onChange={(e: any) => {

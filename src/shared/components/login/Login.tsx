@@ -38,7 +38,7 @@ export const Login: React.FC<ILoginProps> = ({ }) => {
 
         try {
             data = { "usuario": "cristino" }
-            const res = await axios.post("http://localhost:5001/v1-ibra/loginscanntec", data);
+            const res = await axios.post("http://192.168.253.94:5001/v1-ibra/loginscanntec", data);
 
             if (res.status === 200) {
                 console.log("LOGOU", res.data);
