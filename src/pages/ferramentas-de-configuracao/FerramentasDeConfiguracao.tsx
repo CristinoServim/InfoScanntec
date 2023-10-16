@@ -166,6 +166,34 @@ export const FerramentasDeConfiguracao = () => {
         mode: "onChange"
     });
 
+    const lojasMapeamento: any = {
+        0: {
+            nome: "lojaNome1",
+            codigo: "lojaCodigo1",
+            codigoscanntec: "lojaCodigoScanntech1"
+        },
+        1: {
+            nome: "lojaNome2",
+            codigo: "lojaCodigo2",
+            codigoscanntec: "lojaCodigoScanntech2"
+        },
+        2: {
+            nome: "lojaNome3",
+            codigo: "lojaCodigo3",
+            codigoscanntec: "lojaCodigoScanntech3"
+        },
+        3: {
+            nome: "lojaNome4",
+            codigo: "lojaCodigo4",
+            codigoscanntec: "lojaCodigoScanntech4"
+        },
+        4: {
+            nome: "lojaNome5",
+            codigo: "lojaCodigo5",
+            codigoscanntec: "lojaCodigoScanntech5"
+        },
+      };
+
     const onSubmit = async (data: any) => {
         const lojasAtivas = [];
 
@@ -174,7 +202,7 @@ export const FerramentasDeConfiguracao = () => {
             const lojaCodigo = data[`lojaCodigo${i}`];
             const lojaCodigoScanntech = data[`lojaCodigoScanntech${i}`];
 
-            if (lojaCodigo !== undefined && lojaCodigoScanntech !== undefined) {
+            if (lojaCodigo && lojaCodigoScanntech) {
                 lojasAtivas.push({
                     lojaNome,
                     lojaCodigo,
@@ -183,7 +211,6 @@ export const FerramentasDeConfiguracao = () => {
                 delete data[`lojaCodigo${i}`]
                 delete data[`lojaCodigoScanntech${i}`]
                 delete data[`lojaNome${i}`]
-
             }
             else {
                 console.log(`Loja ${i} não foi inserida em lojas ativas, pois um dos códigos não foi informado!`)
@@ -200,7 +227,7 @@ export const FerramentasDeConfiguracao = () => {
                     'Content-Type': 'application/json'
                 }
             };
-            const res = await axios.post("http://192.168.253.94:5001/v1-ibra/loginscanntec", data);
+            const res = await axios.post("http://192.168.253.94:5001/v1-ibra/configurascanntec", data);
 
             if (res.status === 200) {
                 console.log("GRAVOU");
@@ -214,12 +241,15 @@ export const FerramentasDeConfiguracao = () => {
 
 
     const excluirLoja = (index: number) => {
-        console.log(index)
         if (index === 0) {
             console.log("Exclusão falhou, pois é obrigatório o envio de pelomenos uma loja!")
         }
         else {
             setLojas((lojas) => lojas.filter((_, i) => i !== index))
+            const campos = lojasMapeamento[index];
+            setValue(campos.nome, null);
+            setValue(campos.codigo, null);
+            setValue(campos.codigoscanntec, null);
         }
     }
 
@@ -227,49 +257,17 @@ export const FerramentasDeConfiguracao = () => {
 
     useEffect(() => {
         if (usuarioLogado !== null) {
-            console.log(usuarioLogado)
-            
-            // setValue('empresa', usuarioLogado.empresa)
-            // setValue('local', usuarioLogado.local)
             reset(usuarioLogado)
             setLojas(usuarioLogado.lojasAtivas)
 
-            const campoMapeamento: any = {
-                0: {
-                    nome: "lojaNome1",
-                    codigo: "lojaCodigo1",
-                    codigoscanntec: "lojaCodigoScanntech1"
-                },
-                1: {
-                    nome: "lojaNome2",
-                    codigo: "lojaCodigo2",
-                    codigoscanntec: "lojaCodigoScanntech2"
-                },
-                2: {
-                    nome: "lojaNome3",
-                    codigo: "lojaCodigo3",
-                    codigoscanntec: "lojaCodigoScanntech3"
-                },
-                3: {
-                    nome: "lojaNome4",
-                    codigo: "lojaCodigo4",
-                    codigoscanntec: "lojaCodigoScanntech4"
-                },
-                4: {
-                    nome: "lojaNome5",
-                    codigo: "lojaCodigo5",
-                    codigoscanntec: "lojaCodigoScanntech5"
-                },
-              };
-              
-              usuarioLogado.lojasAtivas.forEach((loja: any, index: number) => {
-                const campos = campoMapeamento[index];
+            usuarioLogado.lojasAtivas.forEach((loja: any, index: number) => {
+                const campos = lojasMapeamento[index];
                 if (campos) {
-                  setValue(campos.nome, loja.lojaNome);
-                  setValue(campos.codigo, loja.lojaCodigo);
-                  setValue(campos.codigoscanntec, loja.lojaCodigoScanntech);
+                    setValue(campos.nome, loja.lojaNome);
+                    setValue(campos.codigo, loja.lojaCodigo);
+                    setValue(campos.codigoscanntec, loja.lojaCodigoScanntech);
                 }
-              });
+            });
         }
     }, [reset, setValue, usuarioLogado])
 
