@@ -44,23 +44,10 @@ export const Login: React.FC<ILoginProps> = ({ }) => {
                 console.log("LOGOU", res.data);
                 gravarUsuario(res.data)
             } else {
-                console.log("DEU RUIM ENVIAR PRO BACKEND");
+                console.log("Erro no login");
             }
 
-            // for (let i = 1; i <= 5; i++) {
-            //     const lojaCodigo = res.data[`lojaCodigo${i}`];
-            //     const lojaCodigoScanntech = data[`lojaCodigoScanntech${i}`];
 
-            //     if (lojaCodigo !== undefined && lojaCodigoScanntech !== undefined) {
-            //         lojasAtivas.push({
-            //             lojaCodigo,
-            //             lojaCodigoScanntech
-            //         });
-            //     }
-            //     else {
-            //         console.log(`Loja ${i} não foi inserida em lojas ativas, pois um dos códigos não foi informado!`)
-            //     }
-            // }
 
         } catch (error) {
             console.error("Erro ao enviar para o servidor:", error);

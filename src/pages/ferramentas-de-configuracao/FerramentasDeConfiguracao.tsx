@@ -54,7 +54,7 @@ export const FerramentasDeConfiguracao = () => {
 
     const [error, setError] = useState<boolean>(false)
 
-    const [lojas, setLojas] = useState<Loja[]>([{ nome: '', codigo: 0 }])
+    const [lojas, setLojas] = useState<Loja[]>([{ nome: '', codigo: 0, }])
 
     const validationSchema = Yup.object({
 
@@ -194,6 +194,11 @@ export const FerramentasDeConfiguracao = () => {
         console.log(data);
 
         try {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
             const res = await axios.post("http://localhost:5001/v1-ibra/configurascanntec", data);
 
             if (res.status === 200) {

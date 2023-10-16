@@ -34,52 +34,13 @@ export const TxtFieldForm = (props: ITxtFieldForm) => {
         event.preventDefault();
     };
 
-    // const onBlurDate = async (value: any, onChange: any, error: any) => {
-    //     const inputYear = new Date(value).getFullYear()
-    //     const currentYear = new Date().getFullYear()
-    //     if (inputYear < 2000 || inputYear > currentYear) {
-    //         await showAlertError({
-    //             title: undefined,
-    //             message: `Insira um ano válido`,
-    //         });
-
-    //         onChange(getData())
-    //         error = {
-    //             message: 'Insira um ano válido',
-    //             ref: { name: name },
-    //             type: "validationEmpty"
-    //         }
-    //     }
-    // }
-
-    // const applyMask = (value: any) => {
-    //     if (mask === 'cpf') {
-    //         return formatCPFMask(value)
-    //     }
-    //     else if (mask === 'cnpj') {
-    //         return formatCNPJMask(value)
-    //     }
-    //     else if (mask === 'fone') {
-    //         return formatPhone(value)
-    //     }
-    //     else if (mask === 'cep') {
-    //         return formatCEPMask(value)
-    //     }
-    //     else if (mask === 'rg') {
-    //         return formatRGandIE(value)
-    //     }
-    //     else {
-    //         return value
-    //     }
-    // }
-
-    function tratarValue(value:any){
-        if(value){
-            if(type){
-            }else{
+    function tratarValue(value: any) {
+        if (value) {
+            if (type) {
+            } else {
                 return value;
             }
-        }else{
+        } else {
             return ""
         }
     }
@@ -95,44 +56,24 @@ export const TxtFieldForm = (props: ITxtFieldForm) => {
                         focused={type === 'date' || type === 'time' || type === 'password' ? true : this}
                         inputProps={{
                             style: { textAlign: textAlign ? textAlign : 'left' },
-                            // endadornment: type === 'password' ?
-                            //     <IconButton
-                            //         aria-label="toggle password visibility"
-                            //         onClick={handleClickShowPassword}
-                            //         onMouseDown={handleMouseDownPassword}
-                            //         edge="end"> {showPassword ? <VisibilityOff /> : <Visibility />}
-                            //     </IconButton>
-                            //     : undefined,
                         }}
                         InputProps={{
-                            style: { textAlign: textAlign || 'left', fontSize: '0.95rem'}, 
+                            style: { textAlign: textAlign || 'left', fontSize: '0.95rem' },
                         }}
-                        InputLabelProps={{ style: { color: error ? VermelhoPadrao : isRef ? AzulPadrao : VerdeIntermediario, fontSize: '1.15rem'} }}
+                        InputLabelProps={{ style: { color: error ? VermelhoPadrao : isRef ? AzulPadrao : VerdeIntermediario, fontSize: '1.15rem' } }}
                         value={type ? tratarValue(value) : value || ""}
                         type={type || 'text'}
                         label={label}
-                        onChange={(e : any) => {
+                        onChange={(e: any) => {
                             let value = e.target.value
 
-                            // if (mask) {
-                            //     value = applyMask(value)
-                            // }
 
-                            // else if (props.type === 'decimal') {
-                            //     if (casasDecimais) {
-                            //         value = decimalDigitsMask(value, casasDecimais)
-                            //     }
-                            //     else {
-                            //         value = decimalDigitsMask(value, 2)
-                            //     }
-                            // }
                             onChange(value)
                         }}
-                        // onBlur={props.type === 'date' ? (e: any) => onBlurDate(e.target.value, onChange, error) : (onBlurCustom || this)}
                         variant="outlined"
                         disabled={readOnly}
-                        sx = {
-                            { 
+                        sx={
+                            {
                                 width: '100%',
                                 "& .MuiInputBase-root.Mui-disabled": {
                                     "& > fieldset": {
@@ -145,11 +86,11 @@ export const TxtFieldForm = (props: ITxtFieldForm) => {
                                         borderWidth: isRequired ? 2 : 1,
                                         fontSize: '1.12rem',
                                     },
-                        
+
                                     "& .MuiInputBase-input.Mui-disabled": {
                                         WebkitTextFillColor: "#5a5a5a",
                                     },
-                        
+
                                     '&:hover fieldset': {
                                         borderColor: error ? VermelhoPadrao : isRequired ? GoldPadrao : VerdeClaro,
                                     },
@@ -160,8 +101,8 @@ export const TxtFieldForm = (props: ITxtFieldForm) => {
                                 },
                             }
                         }
-                        
-                        />
+
+                    />
 
                     {error ? (
                         <div className="error" style={{ color: VermelhoPadrao, fontWeight: 'bold', fontSize: '0.8em' }}>{error.message}</div>
