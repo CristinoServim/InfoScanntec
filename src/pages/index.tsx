@@ -1,1 +1,1 @@
-export * from './ferramentas-de-configuracao/FerramentasDeConfiguracao';
+export * from './configuracoes/Configuracoes';

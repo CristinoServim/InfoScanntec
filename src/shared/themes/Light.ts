@@ -17,7 +17,12 @@ export const LightTheme = createTheme({
         },
         background: {
             paper: '#ffffff',
-            default: 'white',
+            default: 'Georgia',
         }
+    },
+    typography: {
+        fontFamily: [
+            'font-family: "Josefin Sans", sans-serif;'
+        ].join(',')
     }
 });

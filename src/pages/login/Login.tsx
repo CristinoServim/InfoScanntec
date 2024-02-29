@@ -40,6 +40,11 @@ export const Login: React.FC<ILoginProps> = ({ }) => {
                         path: '/configuracao',
                         label: 'Configurações',
                     },
+                    {
+                        icon: 'send',
+                        path: '/envios',
+                        label: 'Envios',
+                    },
                 ]);
                 openDrawer()
             } else {

@@ -47,7 +47,7 @@ interface Loja {
 }
 
 
-export const FerramentasDeConfiguracao = () => {
+export const Configuracoes = () => {
 
     const [error, setError] = useState<boolean>(false)
 
@@ -248,88 +248,80 @@ export const FerramentasDeConfiguracao = () => {
     }, [reset, setValue, usuarioLogado])
 
     return (
+            
+            <form onSubmit={handleSubmit(onSubmit)} id='form-principal' style={{backgroundColor: '#f2f2f2'}}>
 
-        <Grid container direction={'row'}>
-            <form onSubmit={handleSubmit(onSubmit)} id='form-principal'>
+                <Box sx={{ backgroundColor: 'green', borderRadius: 1, boxShadow: '0 4px 7px rgba(0, 0, 0, 0.4)' }}>
+                    <Typography color='primary' variant='h5' sx={{ padding: 2, paddingLeft: 3, marginBottom: 3, color: 'white', fontSize: 27 }}>Configurações</Typography>
+                </Box>
 
-
-                <Grid item xs={12} md={12} lg={12} xl={12} sx={{}}>
-
-                    <Box sx={{ backgroundColor: 'green', borderRadius: 1, boxShadow: '0 4px 7px rgba(0, 0, 0, 0.4)' }}>
-                        <Typography color='primary' variant='h5' sx={{ padding: 2, paddingLeft: 3, marginBottom: 3, color: 'white', fontSize: 27 }}>Configurações</Typography>
-                    </Box>
-
-                    <Card sx={{ margin: 2 }}>
-                        <CardContent>
-                            <Typography variant='h5' sx={{ borderBottom: 'solid 1px black', marginBottom: 3 }}>Informações operacionais</Typography>
-                            <Grid container direction='row' spacing={1.5}>
-                                <Grid item xs={12} md={6} lg={6} xl={6}>
-                                    <TxtFieldForm label='Intervalo de sincronização (min)' name='intervaloSincronizacao' control={control} />
-                                </Grid>
-                                <Grid item xs={12} md={6} lg={6} xl={6}>
-                                    <TxtFieldForm label='Hora de fechamento' name='horaFechamento' control={control} type='time' />
-                                </Grid>
+                <Card sx={{ margin: 2 }}>
+                    <CardContent>
+                        <Typography variant='h5' sx={{ borderBottom: 'solid 1px black', marginBottom: 3 }}>Informações operacionais</Typography>
+                        <Grid container direction='row' spacing={1.5}>
+                            <Grid item xs={12} md={6} lg={6} xl={6}>
+                                <TxtFieldForm label='Intervalo de sincronização (min)' name='intervaloSincronizacao' control={control} />
                             </Grid>
-                        </CardContent>
-                    </Card>
-
-                    <Card sx={{ margin: 2 }}>
-                        <CardContent>
-                            <Typography variant='h5' sx={{ borderBottom: 'solid 1px black', marginBottom: 3 }}>URL's</Typography>
-
-                            <Grid container direction='row' spacing={1.5}>
-                                <Grid item xs={12} md={12} lg={12} xl={12}>
-                                    <TxtFieldForm label='URL BASE' name='urlBase' control={control} />
-                                </Grid>
-                                <Grid item xs={12} md={12} lg={12} xl={12}>
-                                    <TxtFieldForm label='URL DE RECEBIMENTO' name='urlRecebimento' control={control} />
-                                </Grid>
-                                <Grid item xs={12} md={12} lg={12} xl={12}>
-                                    <TxtFieldForm label='URL DE ENVIO' name='urlEnvio' control={control} />
-                                </Grid>
+                            <Grid item xs={12} md={6} lg={6} xl={6}>
+                                <TxtFieldForm label='Hora de fechamento' name='horaFechamento' control={control} type='time' />
                             </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
 
-                        </CardContent>
-                    </Card>
+                <Card sx={{ margin: 2 }}>
+                    <CardContent>
+                        <Typography variant='h5' sx={{ borderBottom: 'solid 1px black', marginBottom: 3 }}>URL's</Typography>
 
-                    <Card sx={{ margin: 2 }}>
-                        <CardContent>
-                            <Typography variant='h5' sx={{ borderBottom: 'solid 1px black', marginBottom: 3 }}>Lojas</Typography>
-                            {lojas.map((loja, index) => (
-                                <Box key={index} sx={{ marginBottom: 3 }}>
-                                    <Grid container direction='row' spacing={1.5}>
-                                        <Grid item xs={12} md={4} lg={3.4} xl={3.4}>
-                                            <TxtFieldForm label='Nome' name={`lojaNome${index + 1}`} control={control} />
-                                        </Grid>
-                                        <Grid item xs={12} md={4} lg={3.3} xl={3.3}>
-                                            <TxtFieldForm label='Código' name={`lojaCodigo${index + 1}`} control={control} />
-                                        </Grid>
-                                        <Grid item xs={12} md={4} lg={3.3} xl={3.3}>
-                                            <TxtFieldForm label='Código Scanntech' name={`lojaCodigoScanntech${index + 1}`} control={control} />
-                                        </Grid>
-                                        <Grid item xs={12} md={12} lg={2} xl={2} sx={{ marginTop: '3px' }}>
-                                            <ButtonGeneric title={'Excluir'} typeStyle='excluir' fullWidth type='button' onClick={() => excluirLoja(index)} />
-                                        </Grid>
+                        <Grid container direction='row' spacing={1.5}>
+                            <Grid item xs={12} md={12} lg={12} xl={12}>
+                                <TxtFieldForm label='URL BASE' name='urlBase' control={control} />
+                            </Grid>
+                            <Grid item xs={12} md={12} lg={12} xl={12}>
+                                <TxtFieldForm label='URL DE RECEBIMENTO' name='urlRecebimento' control={control} />
+                            </Grid>
+                            <Grid item xs={12} md={12} lg={12} xl={12}>
+                                <TxtFieldForm label='URL DE ENVIO' name='urlEnvio' control={control} />
+                            </Grid>
+                        </Grid>
+
+                    </CardContent>
+                </Card>
+
+                <Card sx={{ margin: 2 }}>
+                    <CardContent>
+                        <Typography variant='h5' sx={{ borderBottom: 'solid 1px black', marginBottom: 3 }}>Lojas</Typography>
+                        {lojas.map((loja, index) => (
+                            <Box key={index} sx={{ marginBottom: 3 }}>
+                                <Grid container direction='row' spacing={1.5}>
+                                    <Grid item xs={12} md={4} lg={3.4} xl={3.4}>
+                                        <TxtFieldForm label='Nome' name={`lojaNome${index + 1}`} control={control} />
                                     </Grid>
-                                </Box>
-                            ))}
+                                    <Grid item xs={12} md={4} lg={3.3} xl={3.3}>
+                                        <TxtFieldForm label='Código' name={`lojaCodigo${index + 1}`} control={control} />
+                                    </Grid>
+                                    <Grid item xs={12} md={4} lg={3.3} xl={3.3}>
+                                        <TxtFieldForm label='Código Scanntech' name={`lojaCodigoScanntech${index + 1}`} control={control} />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={2} xl={2} sx={{ marginTop: '3px' }}>
+                                        <ButtonGeneric title={'Excluir'} typeStyle='excluir' fullWidth type='button' onClick={() => excluirLoja(index)} />
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        ))}
 
-                            {lojas.length < 5 &&
-                                <ButtonGeneric title={'Adicionar loja'} typeStyle='adicionar' onClick={(novaLoja: Loja) => setLojas([...lojas, novaLoja])} type='button' fullWidth />
-                            }
-                        </CardContent>
-                    </Card>
-
-                </Grid>
-
+                        {lojas.length < 5 &&
+                            <ButtonGeneric title={'Adicionar loja'} typeStyle='adicionar' onClick={(novaLoja: Loja) => setLojas([...lojas, novaLoja])} type='button' fullWidth />
+                        }
+                    </CardContent>
+                </Card>
 
                 <Grid item xs={12} md={12} lg={12} xl={12} sx={{ margin: 2 }}>
                     <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
                         <ButtonGeneric title={"Salvar"} typeStyle="gravar" form={'form-principal'} />
                     </Box>
                 </Grid>
-            </form>
 
-        </Grid>
+            </form>
     );
 };

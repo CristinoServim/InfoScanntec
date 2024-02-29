@@ -17,7 +17,6 @@ interface IMenuLateralProps {
     children: React.ReactNode
 };
 
-
 const ListItemLink: React.FC<IListItemLinkProps> = ({ to, icon, label, onClick }) => {
     const navigate = useNavigate();
 
