@@ -9,7 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import AddIcon from '@mui/icons-material/Add';
-import { VerdeEscuro, GoldPadrao, AmareloIntermediario, AzulPadrao, VermelhoPadrao, AmareloClaro, VerdeClaro } from '../../../assets/colors/CoresPadroes';
+import { VerdeEscuro, GoldPadrao, AmareloIntermediario, AzulPadrao, VermelhoPadrao, AmareloClaro, VerdeClaro, VerdeIntermediario } from '../../../assets/colors/CoresPadroes';
 
 interface IButtonGeneric {
     title: any
@@ -31,7 +31,7 @@ export const ButtonGeneric = (props: IButtonGeneric) => {
             return (
                 <ButtonStyled
                     backgroundcolor={VerdeEscuro}
-                    backgroundcolorhover={'#33964d'}
+                    backgroundcolorhover={'green'}
                     colorprop={'white'}
                     fullWidth={fullWidth}
                     height={height}
@@ -76,7 +76,6 @@ export const ButtonGeneric = (props: IButtonGeneric) => {
                     form={form || null}
                     variant='outlined'
                     type={type ? type : 'submit'}
-                    endIcon={<FileDownloadIcon sx={{ marginBottom: '2px' }} />}
                     onClick={onClick}>
                     {title}
                 </ButtonStyled>
@@ -138,9 +137,9 @@ export const ButtonGeneric = (props: IButtonGeneric) => {
         case 'login':
             return (
                 <ButtonStyled
-                    backgroundcolor={VerdeEscuro}
-                    backgroundcolorhover={VerdeClaro}
-                    colorprop={'white'}
+                    backgroundcolor={GoldPadrao}
+                    backgroundcolorhover={'yellow'}
+                    colorprop={'green'}
                     fullWidth={fullWidth}
                     height={height}
                     disabled={disabled || this}

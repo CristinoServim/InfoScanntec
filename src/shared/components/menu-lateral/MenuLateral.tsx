@@ -1,11 +1,11 @@
-import { Icon, Avatar, Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from '@mui/material';
+import { Icon, Avatar, Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
+import { useDrawerContext } from '../../contexts';
+import logo from '../../../assets/imgs/logo copy.png'
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useAuth } from '../../contexts/AuthContext';
 
-//icones
-import ColorLensIcon from '@mui/icons-material/ColorLens';
-
-import { useAppThemeContext, useDrawerContext } from '../../contexts';
 interface IListItemLinkProps {
     to: string;
     icon: any;
@@ -16,7 +16,6 @@ interface IListItemLinkProps {
 interface IMenuLateralProps {
     children: React.ReactNode
 };
-
 
 
 const ListItemLink: React.FC<IListItemLinkProps> = ({ to, icon, label, onClick }) => {
@@ -32,69 +31,83 @@ const ListItemLink: React.FC<IListItemLinkProps> = ({ to, icon, label, onClick }
 
     return (
         <ListItemButton selected={!!match} onClick={handleClick}>
-            <ListItemIcon>
+            <ListItemIcon sx={{ color: 'white' }}>
                 <Icon>{icon}</Icon>
             </ListItemIcon>
-            <ListItemText primary={label} />
+            <ListItemText primary={label} sx={{ color: 'white' }} />
         </ListItemButton>
 
     )
-
 }
 
 export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
+    const navigate = useNavigate()
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+    const { limparUsuario } = useAuth();
 
     const { isDrawerOpen, drawerOptions, toggleDrawerOpen } = useDrawerContext();
-    const { toggleTheme } = useAppThemeContext();
 
     return (
         <>
-            <Drawer open={isDrawerOpen} variant={smDown ? 'temporary' : 'permanent'} onClose={toggleDrawerOpen}>
-                <Box width={theme.spacing(28)} height="100%" display="flex" flexDirection="column">
+            {isDrawerOpen &&
+                <>
+                    <Drawer open={isDrawerOpen} variant={smDown ? 'temporary' : 'permanent'} onClose={toggleDrawerOpen} >
+                        <Box width={theme.spacing(28)} height="100%" display="flex" flexDirection="column" bgcolor='green'>
 
-                    <Box width="100%" height={theme.spacing(20)} display="flex" alignItems="center" justifyContent="center" bgcolor='#2E8B57'>
-                        <Avatar
-                            sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
-                            src='./images/logo.png'
-                        // src="https://static.wixstatic.com/media/97349f_a4abdfe6f4384c2884ae2228ad3528b9~mv2.png/v1/fill/w_60,h_60,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Cabe%C3%A7alhoSIte_fw.png"
-                        />
-                    </Box>
-
-                    <Divider />
-
-                    <Box flex={1} >
-                        <List component="nav">
-                            {drawerOptions.map(drawerOption => (
-                                <ListItemLink
-                                    to={drawerOption.path}
-                                    key={drawerOption.path}
-                                    icon={drawerOption.icon}
-                                    label={drawerOption.label}
-                                    onClick={smDown ? toggleDrawerOpen : undefined}
+                            <Box
+                                width="100%"
+                                height={theme.spacing(20)}
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="center"
+                                justifyContent="center"
+                                marginTop={2}
+                            >
+                                <Avatar
+                                    sx={{ height: theme.spacing(12), width: theme.spacing(12), marginBottom: 1 }}
+                                    src={logo}
                                 />
-                            ))}
-                        </List>
-
-                    </Box>
-
-                    <Box>
-                        <List component="nav">
-                            <ListItemButton onClick={toggleTheme}>
-                                <ListItemIcon>
-                                    <ColorLensIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Alternar tema" />
-                            </ListItemButton>
-                        </List>
-                    </Box>
+                                <Typography color={'white'} fontSize={22} textAlign="center" marginBottom={1}>
+                                    InfoScanntech
+                                </Typography>
+                            </Box>
 
 
-                </Box>
-            </Drawer>
+                            <Divider color='white' />
 
-            <Box height="100vh" marginLeft={smDown ? 0 : theme.spacing(28)}>
+                            <Box flex={1} >
+                                <List component="nav">
+                                    {drawerOptions.map(drawerOption => (
+                                        <ListItemLink
+                                            to={drawerOption.path}
+                                            key={drawerOption.path}
+                                            icon={drawerOption.icon}
+                                            label={drawerOption.label}
+                                            onClick={smDown ? toggleDrawerOpen : undefined}
+                                        />
+                                    ))}
+                                </List>
+
+                            </Box>
+
+                            <Box>
+                                <List component="nav">
+                                    <ListItemButton onClick={() => { limparUsuario(); toggleDrawerOpen(); navigate('/login') }}>
+                                        <ListItemIcon sx={{ color: 'red' }}>
+                                            <LogoutIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Logout" sx={{ color: 'red' }} />
+                                    </ListItemButton>
+                                </List>
+                            </Box>
+
+                        </Box>
+                    </Drawer>
+                </>
+            }
+
+            <Box height="100vh" marginLeft={smDown || !isDrawerOpen ? 0 : theme.spacing(28)}>
                 {children}
             </Box>
         </>

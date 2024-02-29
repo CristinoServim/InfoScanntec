@@ -1,34 +1,39 @@
 import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useDrawerContext, useLoginContext } from '../shared/contexts';
+import { useDrawerContext } from '../shared/contexts';
 import { FerramentasDeConfiguracao, Login } from '../shared/components';
+import { Home } from '../pages/Home/Home';
+import { useAuth } from '../shared/contexts/AuthContext';
+import { Cadastro } from '../pages/cadastro/Cadastro';
 
 export const AppRoutes = () => {
-  const { setDrawerOptions } = useDrawerContext();
-  const { setLoginOptions } = useLoginContext();
+  const { setDrawerOptions, openDrawer } = useDrawerContext();
+  const { usuarioLogado } = useAuth()
 
   useEffect(() => {
-    setDrawerOptions([
-      {
-        icon: 'home',
-        path: '/pagina-inicial',
-        label: 'Página inicial',
-      },
-      {
-        icon: 'settings',
-        path: '/configuracao',
-        label: 'Configuração',
-      },
-    ]);
-
-  }, []);
-
+    if (usuarioLogado) {
+      setDrawerOptions([
+        {
+          icon: 'home',
+          path: '/home',
+          label: 'Home',
+        },
+        {
+          icon: 'settings',
+          path: '/configuracao',
+          label: 'Configurações',
+        },
+      ]);
+      openDrawer()
+    }
+  }, [])
   return (
     <Routes>
-      <Route path="/pagina-inicial" element={<Login />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/cadastro" element={<Cadastro />} />
       <Route path="/configuracao" element={<FerramentasDeConfiguracao />} />
-
-      <Route path="*" element={<Navigate to="/pagina-inicial" />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   );
 };
