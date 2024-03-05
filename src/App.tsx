@@ -3,26 +3,34 @@ import { AppRoutes } from "./routes";
 import { AppThemeProvider, DrawerProvider } from "./shared/contexts";
 import { MenuLateral } from "./shared/components";
 import { AuthProvider } from "./shared/contexts/AuthContext";
+import { RecoilRoot } from "recoil";
+import DialogProviderConfirm from "./shared/components/dialogs/DialogProviderConfirm";
 
 function App() {
   return (
-    <AppThemeProvider>
+    <RecoilRoot>
+      <DialogProviderConfirm>
 
-      <DrawerProvider>
-        <AuthProvider>
+        <AppThemeProvider>
 
-          <BrowserRouter>
+          <DrawerProvider>
+            <AuthProvider>
 
-            <MenuLateral>
-              <AppRoutes />
-            </MenuLateral>
+              <BrowserRouter>
 
-          </BrowserRouter>
+                <MenuLateral>
+                  <AppRoutes />
+                </MenuLateral>
 
-        </AuthProvider>
-      </DrawerProvider>
+              </BrowserRouter>
 
-    </AppThemeProvider>
+            </AuthProvider>
+          </DrawerProvider>
+
+        </AppThemeProvider>
+      </DialogProviderConfirm>
+
+    </RecoilRoot>
 
   );
 }

@@ -1,9 +1,5 @@
-import { VisibilityOff, Visibility } from "@mui/icons-material";
-import { IconButton, TextField } from "@mui/material";
-import { useState } from "react";
+import { TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
-import SearchIcon from '@mui/icons-material/Search';
-import SearchOffIcon from '@mui/icons-material/SearchOff';
 import { VermelhoPadrao, AzulPadrao, VerdeIntermediario, GoldPadrao, VerdeClaro, VerdeEscuro } from "../../../assets/colors/CoresPadroes";
 
 interface ITxtFieldForm {
@@ -24,15 +20,7 @@ interface ITxtFieldForm {
 
 export const TxtFieldForm = (props: ITxtFieldForm) => {
 
-    const { name, control, label, readOnly, onBlurCustom, type, casasDecimais, textAlign, isRequired, mask, isRef, setSearchHook, searchHook } = props;
-
-    const [showPassword, setShowPassword] = useState(false);
-
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-    };
+    const { name, control, label, readOnly, type, textAlign, isRequired, isRef } = props
 
 
     return (
@@ -51,12 +39,11 @@ export const TxtFieldForm = (props: ITxtFieldForm) => {
                             style: { textAlign: textAlign || 'left', fontSize: '0.95rem' },
                         }}
                         InputLabelProps={{ style: { color: error ? VermelhoPadrao : isRef ? AzulPadrao : VerdeIntermediario, fontSize: '1.15rem' } }}
-                        value={value ||  ""}
+                        value={value || ""}
                         type={type || 'text'}
                         label={label}
                         onChange={(e: any) => {
                             let value = e.target.value
-
 
                             onChange(value)
                         }}

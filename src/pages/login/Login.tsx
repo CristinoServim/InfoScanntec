@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/imgs/logo copy.png'
 import { useDrawerContext } from '../../shared/contexts';
 import { TextFieldLogin } from '../../shared/components/textfield/TextFieldLogin';
+import { VerdeEscuro } from '../../assets/colors/CoresPadroes';
 
 
 interface ILoginProps {
@@ -69,7 +70,7 @@ export const Login: React.FC<ILoginProps> = ({ }) => {
     });
 
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ backgroundColor: 'green' }}>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ backgroundColor: VerdeEscuro }}>
             <form onSubmit={handleSubmit(onSubmit)}>
 
                 <Grid container direction={'row'} sx={{ backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }} spacing={4}>

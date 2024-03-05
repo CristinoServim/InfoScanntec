@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup'; // Certifique-se de impor
 import axios from 'axios';
 import { useAuth } from '../../shared/contexts/AuthContext';
 import { useState, useEffect } from 'react';
+import { VerdeEscuro } from '../../assets/colors/CoresPadroes';
 
 
 interface IFerramentasDeConfiguracaoForm {
@@ -249,9 +250,9 @@ export const Configuracoes = () => {
 
     return (
             
-            <form onSubmit={handleSubmit(onSubmit)} id='form-principal' style={{backgroundColor: '#f2f2f2'}}>
+            <form onSubmit={handleSubmit(onSubmit)} id='form-principal' >
 
-                <Box sx={{ backgroundColor: 'green', borderRadius: 1, boxShadow: '0 4px 7px rgba(0, 0, 0, 0.4)' }}>
+                <Box sx={{ backgroundColor: VerdeEscuro, borderRadius: 1, boxShadow: '0 4px 7px rgba(0, 0, 0, 0.4)' }}>
                     <Typography color='primary' variant='h5' sx={{ padding: 2, paddingLeft: 3, marginBottom: 3, color: 'white', fontSize: 27 }}>Configurações</Typography>
                 </Box>
 
@@ -274,13 +275,13 @@ export const Configuracoes = () => {
                         <Typography variant='h5' sx={{ borderBottom: 'solid 1px black', marginBottom: 3 }}>URL's</Typography>
 
                         <Grid container direction='row' spacing={1.5}>
-                            <Grid item xs={12} md={12} lg={12} xl={12}>
+                            <Grid item xs={12} md={12} lg={12} xl={4}>
                                 <TxtFieldForm label='URL BASE' name='urlBase' control={control} />
                             </Grid>
-                            <Grid item xs={12} md={12} lg={12} xl={12}>
+                            <Grid item xs={12} md={12} lg={12} xl={4}>
                                 <TxtFieldForm label='URL DE RECEBIMENTO' name='urlRecebimento' control={control} />
                             </Grid>
-                            <Grid item xs={12} md={12} lg={12} xl={12}>
+                            <Grid item xs={12} md={12} lg={12} xl={4}>
                                 <TxtFieldForm label='URL DE ENVIO' name='urlEnvio' control={control} />
                             </Grid>
                         </Grid>

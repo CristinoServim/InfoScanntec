@@ -5,6 +5,7 @@ import { useDrawerContext } from '../../contexts';
 import logo from '../../../assets/imgs/logo copy.png'
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuth } from '../../contexts/AuthContext';
+import { VerdeEscuro } from '../../../assets/colors/CoresPadroes';
 
 interface IListItemLinkProps {
     to: string;
@@ -52,7 +53,7 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
             {isDrawerOpen &&
                 <>
                     <Drawer open={isDrawerOpen} variant={smDown ? 'temporary' : 'permanent'} onClose={toggleDrawerOpen} >
-                        <Box width={theme.spacing(28)} height="100%" display="flex" flexDirection="column" bgcolor='green'>
+                        <Box width={theme.spacing(28)} height="100%" display="flex" flexDirection="column" bgcolor= {VerdeEscuro}>
 
                             <Box
                                 width="100%"
