@@ -1,8 +1,9 @@
 import axios from "axios";
+import { API_ENDPOINTS } from "../../config/apiConfig";
 
 export async function enviosFilter(objFilter: any) {
     try {
-        const res = await axios.post("http://192.168.253.94:5001/v1-ibra/movimentospdvenviados", {sdaDataBaixaIni: objFilter.dataInicial, sdaDataBaixaFin: objFilter.dataFinal, sdaEnvioScanntec: objFilter.status});
+        const res = await axios.post(API_ENDPOINTS.movimentospdvenviados, { sdaDataBaixaIni: objFilter.dataInicial, sdaDataBaixaFin: objFilter.dataFinal, sdaEnvioScanntec: objFilter.status });
         return res.data
     } catch (error) {
         return []
@@ -17,7 +18,7 @@ export async function reenviar(envios: any) {
                 sdaNumero: envio.SDA_NUMERO
             }
         })
-        const res = await axios.post("http://192.168.253.94:5001/v1-ibra/reenviar", enviosReq);
+        const res = await axios.post(API_ENDPOINTS.reenviar, enviosReq);
         console.log(res)
         return res.data
     } catch (error) {

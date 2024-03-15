@@ -25,5 +25,5 @@ export const lojaCodigoFilterAtom = atom({
 
 export const enviosFilterAtom = atom({
     key: 'enviosFilterAtom',
-    default: {dataInicial: dataAtual, dataFinal: dataAtual, status: 'S', lojaCodigo: null}
+    default: { dataInicial: dataAtual, dataFinal: dataAtual, status: 'S', lojaCodigo: null }
 })

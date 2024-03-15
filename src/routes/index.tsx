@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useDrawerContext } from '../shared/contexts';
 import { Configuracoes, Login } from '../shared/components';
-import { Home } from '../pages/home/Home';
 import { useAuth } from '../shared/contexts/AuthContext';
 import { Cadastro } from '../pages/cadastro/Cadastro';
 import { Envios } from '../pages/envios/Envios';
+import { Home } from '../pages/Home/Home';
 
 export const AppRoutes = () => {
   const { setDrawerOptions, openDrawer } = useDrawerContext();

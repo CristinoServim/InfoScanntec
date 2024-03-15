@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/imgs/logo copy.png'
 import { useDrawerContext } from '../../shared/contexts';
 import { TextFieldLogin } from '../../shared/components/textfield/TextFieldLogin';
+import { API_ENDPOINTS } from '../../config/apiConfig';
 
 
 interface ICadastroProps {
@@ -24,7 +25,7 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
 
     const onSubmit = async (data: any) => {
         try {
-            const res = await axios.post("http://192.168.253.94:5001/v1-ibra/cadastroscanntech", data);
+            const res = await axios.post(API_ENDPOINTS.cadastroscanntech, data);
 
             if (res.status === 200) {
                 gravarUsuario(res.data)
