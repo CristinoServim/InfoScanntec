@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from '@mui/material';
 import { enviosSelector } from '../../recoil/envios/enviosSelector';
-import TablePaginated, { ITablePaginatedColumn } from '../../shared/components/tables/TablePaginated';
+import TablePaginated, { ITablePaginatedColumn } from '../../shared/components/tables/TableEnvios';
 import { useState } from 'react';
 import { VerdeEscuro } from '../../assets/colors/CoresPadroes';
 

@@ -1,7 +1,7 @@
 
-// const API_BASE_URL: string = "http://192.168.253.94:5001";
+const API_BASE_URL: string = "http://192.168.253.94:5001";
 
-const API_BASE_URL: string = "http://17.1.1.0:5001";
+// const API_BASE_URL: string = "http://17.1.1.0:5001";
 const API_VERSAO: string = "v1-ibra";
 
 // Definindo endpoints como parte de um objeto

@@ -19,8 +19,7 @@ export async function reenviar(envios: any) {
             }
         })
         const res = await axios.post(API_ENDPOINTS.reenviar, enviosReq);
-        console.log(res)
-        return res.data
+        return res
     } catch (error) {
         return error
     }

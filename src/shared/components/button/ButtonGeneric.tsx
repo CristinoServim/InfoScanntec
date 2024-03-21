@@ -259,6 +259,24 @@ export const ButtonGeneric = (props: IButtonGeneric) => {
                     {title}
                 </ButtonStyled>
             )
+        case "dialog_cancelar":
+            return (
+                <ButtonStyled
+                    backgroundcolor={VermelhoPadrao}
+                    backgroundcolorhover={'#ec0000'}
+                    colorprop={'white'}
+                    fullWidth={fullWidth}
+                    disabled={disabled ? true : false}
+                    disableRipple
+                    form={form || null}
+                    variant='outlined'
+                    type={type ? type : 'submit'}
+                    onClick={onClick} 
+                    height={height}
+                    >
+                    {title}
+                </ButtonStyled>
+            )
         default:
             return (
                 <ButtonStyled
@@ -276,6 +294,7 @@ export const ButtonGeneric = (props: IButtonGeneric) => {
                     {title}
                 </ButtonStyled>
             )
+
 
     }
 }

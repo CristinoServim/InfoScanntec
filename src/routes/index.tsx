@@ -5,7 +5,7 @@ import { Configuracoes, Login } from '../shared/components';
 import { useAuth } from '../shared/contexts/AuthContext';
 import { Cadastro } from '../pages/cadastro/Cadastro';
 import { Envios } from '../pages/envios/Envios';
-import { Home } from '../pages/Home/Home';
+import { Home } from '../pages/home/Home';
 
 export const AppRoutes = () => {
   const { setDrawerOptions, openDrawer } = useDrawerContext();

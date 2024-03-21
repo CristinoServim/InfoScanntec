@@ -11,7 +11,8 @@ import {
 import { AzulPadrao } from '../../../assets/colors/CoresPadroes';
 import { ButtonGeneric } from '../button/ButtonGeneric';
 import { IDialogsOptions, IDialogPromise } from './IDialog';
-  
+import AlertGifAmarelo from '../../../assets/imgs/AlertGifResolve.gif'
+
   
   type ShowDialogConfirmHandler = (options: IDialogsOptions) => Promise<boolean>;
   
@@ -53,14 +54,14 @@ import { IDialogsOptions, IDialogPromise } from './IDialog';
   
     return (
       <>
-        <Dialog open={open} onClose={handleCancel} fullWidth maxWidth={false}>
+        <Dialog open={open} onClose={handleCancel} fullWidth maxWidth={false} >
           <DialogContent style={{ overflow: "hidden", width: '100%', backgroundColor: AzulPadrao }}>
             <Grid container>
-              {/* <Grid item xs={12} md={12} lg={12} xl={12}>
+              <Grid item xs={12} md={12} lg={12} xl={12}>
                 <Box sx={{ textAlign: 'center' }}>
                   <img alt="AlertGifAmarelo" src={AlertGifAmarelo} style={{ width: isTelaMobile ? '110px' : isTelaPequena ? '140px' : '170px', height: isTelaMobile ? '110px' : isTelaPequena ? '140px' : '170px' }} />
                 </Box>
-              </Grid> */}
+              </Grid>
               <Grid item xs={12} md={12} lg={12} xl={12}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography variant='h6' sx={{ fontWeight: 'bold', fontFamily: 'Poppins, sans-serif' }} fontSize={isTelaMobile ? '18px' : isTelaPequena ? '23px' : '27px'} color={'white'}>{options.headerMessage}</Typography>
@@ -77,10 +78,10 @@ import { IDialogsOptions, IDialogPromise } from './IDialog';
   
               <Grid container direction={'row'} spacing={2} sx={{ paddingRight: 2, paddingLeft: 2 }}>
                 <Grid item xs={12} md={12} lg={12} xl={12}>
-                  <ButtonGeneric title={"Confirmar"} type='button' onClick={handleConfirm} typeStyle='dialog_alert_confirm' fullWidth />
+                  <ButtonGeneric title={"Confirmar"} type='button' onClick={handleConfirm} typeStyle='dialog_alert_confirm' />
                 </Grid>
                 <Grid item xs={12} md={12} lg={12} xl={12} sx={{ marginBottom: 1 }}>
-                  <ButtonGeneric title={"Cancelar"} type='button' onClick={handleCancel} typeStyle='dialog_cancelar' fullWidth />
+                  <ButtonGeneric title={"Cancelar"} type='button' onClick={handleCancel} typeStyle='dialog_cancelar'  />
                 </Grid>
               </Grid>
   

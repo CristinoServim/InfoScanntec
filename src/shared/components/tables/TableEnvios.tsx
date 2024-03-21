@@ -1,5 +1,5 @@
 import { Box, FormControl, Grid, IconButton, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, TextField, Toolbar, Typography, useTheme } from "@mui/material";
-import { useRecoilState, useRecoilValueLoadable, useSetRecoilState } from "recoil";
+import { useRecoilRefresher_UNSTABLE, useRecoilState, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { Fragment, useEffect, useState } from "react";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -17,9 +17,11 @@ import { TextFieldNumber } from "../textfield/TextFieldNumber";
 import { ButtonGeneric } from "../button/ButtonGeneric";
 import CircularProgress from '@mui/material/CircularProgress';
 import { reenviar } from "../../../recoil/envios/enviosActions";
+import { useDialogConfirm } from "../dialogs/DialogProviderConfirm";
+import { useDialogSucess } from "../dialogs/DialogProviderSucess";
 
 
-interface ITablePaginated {
+interface ITableEnvios {
     columns: readonly ITablePaginatedColumn[],
     selectorRecoil: any,
     item: any,
@@ -43,7 +45,7 @@ export interface ITablePaginatedColumn {
     deleteFunction?: any;
 }
 
-export default function TablePaginated(props: ITablePaginated) {
+export default function TableEnvios(props: ITableEnvios) {
 
     const { columns, selectorRecoil, item, setItem, titleToolbar } = props;
     const [tamanhoLista, setTamanhoLista] = useState(0)
@@ -223,8 +225,12 @@ function TablePaginatedBody(props: ITablePaginatedBody) {
     const { columns, item, setItem, setTamanhoLista, page, rowsPerPage, selectorRecoil, status } = props;
 
     const { state, contents: lista } = useRecoilValueLoadable<any>(selectorRecoil);
+    const refreshEnvios = useRecoilRefresher_UNSTABLE(selectorRecoil)
 
     const [listaPaginada, setListaPaginada] = useState([])
+
+    const showDialogConfirm = useDialogConfirm()
+    const showDialogSucess = useDialogSucess()
 
     useEffect(() => {
         // Calcula o índice do primeiro e do último item da página atual
@@ -236,6 +242,22 @@ function TablePaginatedBody(props: ITablePaginatedBody) {
             setTamanhoLista(lista.length)
         }
     }, [setTamanhoLista, lista, state, page, rowsPerPage])
+
+    const reenviarNaoEnviados = async () => {
+        const confirm = await showDialogConfirm({
+            headerMessage: 'Tem certeza que deseja enviar?'
+        })
+        if(confirm){
+            const res: any = await reenviar(lista)
+            if(res.status === 200){
+                await showDialogSucess({
+                    headerMessage: 'Itens enviados com sucesso!'
+                })
+            }
+            refreshEnvios() 
+        }
+        
+    }
 
     return (
         <>
@@ -258,7 +280,7 @@ function TablePaginatedBody(props: ITablePaginatedBody) {
                                     <TableRow>
                                         <TableCell colSpan={columns.length} style={{ textAlign: 'center' }}>
                                             <Box>
-                                                <ButtonGeneric title={'Enviar'} typeStyle="login" fullWidth onClick={() => reenviar(lista)} />
+                                                <ButtonGeneric title={'Enviar'} typeStyle="login" fullWidth onClick={reenviarNaoEnviados} />
                                             </Box>
                                         </TableCell>
                                     </TableRow>
