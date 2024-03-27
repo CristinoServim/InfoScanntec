@@ -25,8 +25,15 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
 
 
     const onSubmit = async (data: any) => {
+        const objRequest = 
+        {     
+            usu_apelido: data.usuario,
+            usu_pass: data.senha,
+            confirma_senha: data.confirmacaoSenha,    
+            apikey: data.apiKey
+        }
         try {
-            const res = await axios.post(API_ENDPOINTS.cadastroscanntech, data);
+            const res = await axios.post(API_ENDPOINTS.cadastroscanntech, objRequest);
 
             if (res.status === 200) {
                 gravarUsuario(res.data)
@@ -58,20 +65,33 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
         senha: Yup.string()
             .required('*Campo obrigatório'),
         confirmacaoSenha: Yup.string()
-            .required('*Campo obrigatório'),
-        razaoSocial: Yup.string()
-            .required('*Campo obrigatório'),
-        numeroEmpresa: Yup.number()
-            .typeError('O campo deve ser um número')
             .required('*Campo obrigatório')
-            .positive('O campo deve ser um número positivo')
-            .integer('O campo deve ser um número inteiro'),
+            .test("igualdadeValidation", function (value: any) {
+                const senha = this.parent.senha
+                if(senha !== value){
+                    return this.createError({
+                        path: "confirmacaoSenha",
+                        message: "*Senhas não correspondem",
+                    });
+                }
+                return true
+            }),
+        apiKey: Yup.string()
+            .required('*Campo obrigatório'),
 
-        local: Yup.number()
-            .typeError('O campo deve ser um número')
-            .required('*Campo obrigatório')
-            .positive('O campo deve ser um número positivo')
-            .integer('O campo deve ser um número inteiro'),
+        // razaoSocial: Yup.string()
+        //     .required('*Campo obrigatório'),
+        // numeroEmpresa: Yup.number()
+        //     .typeError('O campo deve ser um número')
+        //     .required('*Campo obrigatório')
+        //     .positive('O campo deve ser um número positivo')
+        //     .integer('O campo deve ser um número inteiro'),
+
+        // local: Yup.number()
+        //     .typeError('O campo deve ser um número')
+        //     .required('*Campo obrigatório')
+        //     .positive('O campo deve ser um número positivo')
+        //     .integer('O campo deve ser um número inteiro'),
     });
 
 
@@ -81,7 +101,7 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
     });
 
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ backgroundColor: VerdeEscuro}}>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ backgroundColor: VerdeEscuro }}>
             <form onSubmit={handleSubmit(onSubmit)}>
 
                 <Grid container direction={'row'} sx={{ backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }} spacing={4}>
@@ -96,15 +116,6 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
 
                         <Grid container direction={'row'} spacing={2} columnSpacing={1}>
                             <Grid item xs={12} md={12} lg={12} xl={12}>
-                                <TextFieldLogin label='Razão social' name='razaoSocial' control={control} />
-                            </Grid>
-                            <Grid item xs={6} md={6} lg={6} xl={6}>
-                                <TextFieldLogin label='Num. Empresa' name='numeroEmpresa' control={control} />
-                            </Grid>
-                            <Grid item xs={6} md={6} lg={6} xl={6}>
-                                <TextFieldLogin label='Local' name='local' control={control} />
-                            </Grid>
-                            <Grid item xs={12} md={12} lg={12} xl={12}>
                                 <TextFieldLogin label='Usuário' name='usuario' control={control} />
                             </Grid>
                             <Grid item xs={6} md={6} lg={6} xl={6}>
@@ -113,7 +124,9 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
                             <Grid item xs={6} md={6} lg={6} xl={6}>
                                 <TextFieldLogin label='Confirmação de senha' name='confirmacaoSenha' control={control} type='password' />
                             </Grid>
-
+                            <Grid item xs={12} md={12} lg={12} xl={12}>
+                                <TextFieldLogin label='API KEY' name='apiKey' control={control} />
+                            </Grid>
                             <Grid item xs={12} md={12} lg={12} xl={12}>
                                 <ButtonGeneric fullWidth title={"CADASTRAR"} typeStyle="login" />
                             </Grid>

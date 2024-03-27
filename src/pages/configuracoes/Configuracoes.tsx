@@ -10,44 +10,13 @@ import { useState, useEffect } from 'react';
 import { VerdeEscuro } from '../../assets/colors/CoresPadroes';
 import { API_ENDPOINTS } from '../../config/apiConfig';
 
-
-// interface IFerramentasDeConfiguracaoForm {
-//     intervaloSincronizacao: number,
-//     horaFechamento: string,
-
-//     urlBase: string,
-//     urlRecebimento: string,
-//     urlEnvio: string,
-
-//     lojaNome1: string | null,
-//     lojaCodigo1: number,
-//     lojaCodigoScanntech1: number,
-
-//     lojaNome2: string | null,
-//     lojaCodigo2: number,
-//     lojaCodigoScanntech2: number,
-
-//     lojaNome3: string | null,
-//     lojaCodigo3: number,
-//     lojaCodigoScanntech3: number,
-
-//     lojaNome4: string | null,
-//     lojaCodigo4: number,
-//     lojaCodigoScanntech4: number,
-
-//     lojaNome5: string | null,
-//     lojaCodigo5: number,
-//     lojaCodigoScanntech5: number,
-
-//     lojasAtivas: any
-// }
+// LEMBRAR ADICIONAR CAMPOS : NUM EMPRESA E LOCAL !!!
 
 
 interface Loja {
     nome: string,
     codigo: number
 }
-
 
 export const Configuracoes = () => {
 
