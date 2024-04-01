@@ -5,8 +5,9 @@ import { createContext, useContext, useState, useEffect } from 'react';
 type User = {
     empresa: number;
     local: number;
-    usuario: string;
-    senha: string;
+    usu_codigo: string;
+    usu_apelido: string,
+    usu_pass: string;
     intervaloSincronizacao: number;
     horaFechamento: string;
     urlBase: string;
@@ -29,8 +30,8 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [usuarioLogado, setUsuarioLogado] = useState<User | null>(() => {
-        // Tente recuperar as informações do usuário do localStorage ao inicializar
-        const usuarioSalvo = localStorage.getItem('usuarioLogado');
+        // Tente recuperar as informações do usuário do sessionStorage ao inicializar
+        const usuarioSalvo = sessionStorage.getItem('usuarioLogado');
         return usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
     });
 
@@ -38,24 +39,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // Atualize o estado
         setUsuarioLogado(userData);
 
-        // Armazene as informações no localStorage como JSON
-        localStorage.setItem('usuarioLogado', JSON.stringify(userData));
+        // Armazene as informações no sessionStorage como JSON
+        sessionStorage.setItem('usuarioLogado', JSON.stringify(userData));
     };
 
     const limparUsuario = () => {
         // Limpe o estado
         setUsuarioLogado(null);
 
-        // Remova as informações do localStorage
-        localStorage.removeItem('usuarioLogado');
+        // Remova as informações do sessionStorage
+        sessionStorage.removeItem('usuarioLogado');
     };
 
-    // Use useEffect para atualizar o localStorage sempre que o usuário mudar
+    // Use useEffect para atualizar o sessionStorage sempre que o usuário mudar
     useEffect(() => {
         if (usuarioLogado) {
-            localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+            sessionStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
         } else {
-            localStorage.removeItem('usuarioLogado');
+            sessionStorage.removeItem('usuarioLogado');
         }
     }, [usuarioLogado]);
 

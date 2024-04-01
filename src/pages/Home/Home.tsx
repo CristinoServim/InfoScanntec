@@ -18,7 +18,7 @@ export function Home() {
                   </Grid>
                   <Grid item xs={12} md={12} lg={12} xl={12} sx={{ textAlign: 'center', alignSelf: 'flex-end' }}>
                         <Typography variant="h5">Seja bem-vindo novamente</Typography>
-                        <Typography variant="h6" color={VerdeEscuro} sx={{ fontSize: '28px' }}>{usuarioLogado?.usuario}</Typography>
+                        <Typography variant="h6" color={VerdeEscuro} sx={{ fontSize: '28px' }}>{usuarioLogado?.usu_apelido}</Typography>
                   </Grid>
             </Grid>
       )

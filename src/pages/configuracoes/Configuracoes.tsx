@@ -169,11 +169,6 @@ export const Configuracoes = () => {
         data.lojasAtivas = lojasAtivas;
 
         try {
-            // const config = {
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     }
-            // };
             const res = await axios.post(API_ENDPOINTS.configurascanntec, data);
 
             if (res.status === 200) {

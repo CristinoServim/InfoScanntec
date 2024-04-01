@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Collapse, Grid, Typography } from '@mui/material';
 import axios from 'axios';
 import { ButtonGeneric } from '../../shared/components/button/ButtonGeneric';
 import { useForm } from 'react-hook-form';
@@ -11,6 +11,8 @@ import { useDrawerContext } from '../../shared/contexts';
 import { TextFieldLogin } from '../../shared/components/textfield/TextFieldLogin';
 import { VerdeEscuro } from '../../assets/colors/CoresPadroes';
 import { API_ENDPOINTS } from '../../config/apiConfig';
+import { useState } from 'react';
+import { AlertErro } from '../../shared/components/alerts/AlertErro';
 
 
 interface ILoginProps {
@@ -23,12 +25,18 @@ export const Login: React.FC<ILoginProps> = ({ }) => {
     const { gravarUsuario } = useAuth();
     const { setDrawerOptions, openDrawer } = useDrawerContext();
 
+    const [msgErroApi, setMsgErroApi] = useState<string>('')
+
 
     const onSubmit = async (data: any) => {
         try {
-            const res = await axios.post(API_ENDPOINTS.loginscanntec, data);
-
-            if (res.status === 200) {
+            const objRequest =
+            {
+                usu_apelido: data.usuario,
+                usu_pass: data.senha
+            }
+            const res = await axios.post(API_ENDPOINTS.loginscanntec, objRequest);
+           if (res.status === 200) {
                 gravarUsuario(res.data)
                 navigate('/home')
                 setDrawerOptions([
@@ -52,8 +60,9 @@ export const Login: React.FC<ILoginProps> = ({ }) => {
             } else {
                 console.log("Erro no login");
             }
-        } catch (error) {
-            console.error("Erro ao enviar para o servidor:", error);
+        } catch (error: any) {
+            console.error("Erro no login: " + error.response.data.message);
+            setMsgErroApi(error.response.data.message)
         }
 
     };
@@ -62,7 +71,8 @@ export const Login: React.FC<ILoginProps> = ({ }) => {
             .required('*Campo obrigatório'),
 
         senha: Yup.string()
-            .required('*Campo obrigatório'),
+            .required('*Campo obrigatório')
+            .min(6, '*Minimo 6 caracteres')
     });
 
     const { handleSubmit, control } = useForm({
@@ -86,6 +96,12 @@ export const Login: React.FC<ILoginProps> = ({ }) => {
                     <Grid item xs={8} md={6} lg={5} xl={4}>
 
                         <Grid container direction={'row'} spacing={2}>
+
+                            <Grid item xs={12} md={12} lg={12} xl={12} hidden={!msgErroApi}>
+                                <Collapse in={msgErroApi.length > 1} mountOnEnter unmountOnExit>
+                                    <AlertErro errorApi={msgErroApi} />
+                                </Collapse>
+                            </Grid>
 
                             <Grid item xs={12} md={12} lg={12} xl={12}>
                                 <TextFieldLogin label='Usuário' name='usuario' control={control} />

@@ -36,6 +36,7 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
             const res = await axios.post(API_ENDPOINTS.cadastroscanntech, objRequest);
 
             if (res.status === 200) {
+                console.log(res.data)
                 gravarUsuario(res.data)
                 navigate('/home')
                 setDrawerOptions([

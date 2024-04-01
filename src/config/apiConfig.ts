@@ -6,7 +6,7 @@ const API_VERSAO: string = "v1-ibra";
 
 // Definindo endpoints como parte de um objeto
 export const API_ENDPOINTS = {
-    loginscanntec: `${API_BASE_URL}/${API_VERSAO}/signin`,
+    loginscanntec: `${API_BASE_URL}/${API_VERSAO}/login`,
     cadastroscanntech: `${API_BASE_URL}/${API_VERSAO}/signup`,
     configurascanntec: `${API_BASE_URL}/${API_VERSAO}/configurascanntec`,
     movimentospdvenviados: `${API_BASE_URL}/${API_VERSAO}/movimentospdvenviados`,

@@ -6,6 +6,7 @@ import { useAuth } from '../shared/contexts/AuthContext';
 import { Cadastro } from '../pages/cadastro/Cadastro';
 import { Envios } from '../pages/envios/Envios';
 import { Home } from '../pages/home/Home';
+import ProtectedRoute from './ProtectedRoute';
 
 export const AppRoutes = () => {
   const { setDrawerOptions, openDrawer } = useDrawerContext();
@@ -36,12 +37,12 @@ export const AppRoutes = () => {
 
   return (
     <Routes>
-      <Route path="/envios" element={<Envios />} />
       <Route path="/login" element={<Login />} />
       <Route path="/cadastro" element={<Cadastro />} />
-      <Route path="/configuracao" element={<Configuracoes />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="*" element={<Navigate to="/login" />} />
-    </Routes>
+      <Route path="/envios" element={<ProtectedRoute element={<Envios />} />} />
+      <Route path="/configuracao" element={<ProtectedRoute element={<Configuracoes />} />} />
+      <Route path="/home" element={<ProtectedRoute element={<Home />} />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
+  </Routes>
   );
 };
