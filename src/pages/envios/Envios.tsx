@@ -1,8 +1,9 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, TextField, Typography } from '@mui/material';
 import { enviosSelector } from '../../recoil/envios/enviosSelector';
-import TablePaginated, { ITablePaginatedColumn } from '../../shared/components/tables/TableEnvios';
+import { ITablePaginatedColumn } from '../../shared/components/tables/TableEnvios';
 import { useState } from 'react';
 import { VerdeEscuro } from '../../assets/colors/CoresPadroes';
+import TableEnvios from '../../shared/components/tables/TableEnvios';
 
 
 export const Envios = () => {
@@ -54,7 +55,7 @@ export const Envios = () => {
                 <Typography color='primary' variant='h5' sx={{ padding: 2, paddingLeft: 3, marginBottom: 3, color: 'white', fontSize: 27 }}>Envios</Typography>
             </Box>
             <Grid item xs={12} md={12} lg={12} xl={12} sx={{ margin: 3 }}>
-                <TablePaginated columns={columnsEnvios} selectorRecoil={enviosSelector} item={envio} setItem={setEnvio} titleToolbar='Enviados' />
+                <TableEnvios columns={columnsEnvios} selectorRecoil={enviosSelector} item={envio} setItem={setEnvio} titleToolbar='Enviados' />
             </Grid>
         </>
     );

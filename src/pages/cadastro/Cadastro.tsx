@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Collapse, Grid, Typography } from '@mui/material';
 import axios from 'axios';
 import { ButtonGeneric } from '../../shared/components/button/ButtonGeneric';
 import { useForm } from 'react-hook-form';
@@ -11,6 +11,9 @@ import { useDrawerContext } from '../../shared/contexts';
 import { TextFieldLogin } from '../../shared/components/textfield/TextFieldLogin';
 import { API_ENDPOINTS } from '../../config/apiConfig';
 import { VerdeEscuro } from '../../assets/colors/CoresPadroes';
+import { AlertErro } from '../../shared/components/alerts/AlertErro';
+import { useState } from 'react';
+import { useDialogSucess } from '../../shared/components/dialogs/DialogProviderSucess';
 
 
 interface ICadastroProps {
@@ -20,16 +23,19 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
 
     const navigate = useNavigate()
 
+    const [msgErroApi, setMsgErroApi] = useState<string>('')
+    const showDialogSucess = useDialogSucess()
+
     const { gravarUsuario } = useAuth();
     const { setDrawerOptions, toggleDrawerOpen } = useDrawerContext();
 
 
     const onSubmit = async (data: any) => {
-        const objRequest = 
-        {     
+        const objRequest =
+        {
             usu_apelido: data.usuario,
             usu_pass: data.senha,
-            confirma_senha: data.confirmacaoSenha,    
+            confirma_senha: data.confirmacaoSenha,
             apikey: data.apiKey
         }
         try {
@@ -38,6 +44,9 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
             if (res.status === 200) {
                 console.log(res.data)
                 gravarUsuario(res.data)
+                await showDialogSucess({
+                    headerMessage: 'Itens enviados com sucesso!'
+                })
                 navigate('/home')
                 setDrawerOptions([
                     {
@@ -55,11 +64,13 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
             } else {
                 console.log("Erro no cadastro");
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Erro ao enviar para o servidor:", error);
+            setMsgErroApi(error.response.data.message)
         }
 
     };
+
     const validationSchema = Yup.object({
         usuario: Yup.string()
             .required('*Campo obrigatório'),
@@ -69,7 +80,7 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
             .required('*Campo obrigatório')
             .test("igualdadeValidation", function (value: any) {
                 const senha = this.parent.senha
-                if(senha !== value){
+                if (senha !== value) {
                     return this.createError({
                         path: "confirmacaoSenha",
                         message: "*Senhas não correspondem",
@@ -79,20 +90,6 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
             }),
         apiKey: Yup.string()
             .required('*Campo obrigatório'),
-
-        // razaoSocial: Yup.string()
-        //     .required('*Campo obrigatório'),
-        // numeroEmpresa: Yup.number()
-        //     .typeError('O campo deve ser um número')
-        //     .required('*Campo obrigatório')
-        //     .positive('O campo deve ser um número positivo')
-        //     .integer('O campo deve ser um número inteiro'),
-
-        // local: Yup.number()
-        //     .typeError('O campo deve ser um número')
-        //     .required('*Campo obrigatório')
-        //     .positive('O campo deve ser um número positivo')
-        //     .integer('O campo deve ser um número inteiro'),
     });
 
 
@@ -116,6 +113,13 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
                     <Grid item xs={8} md={6} lg={5} xl={4}>
 
                         <Grid container direction={'row'} spacing={2} columnSpacing={1}>
+
+                            <Grid item xs={12} md={12} lg={12} xl={12} hidden={!msgErroApi}>
+                                <Collapse in={msgErroApi.length > 1} mountOnEnter unmountOnExit>
+                                    <AlertErro errorApi={msgErroApi} />
+                                </Collapse>
+                            </Grid>
+
                             <Grid item xs={12} md={12} lg={12} xl={12}>
                                 <TextFieldLogin label='Usuário' name='usuario' control={control} />
                             </Grid>

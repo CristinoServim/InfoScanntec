@@ -1,6 +1,4 @@
 import SaveIcon from '@mui/icons-material/Save';
-import styled from "@emotion/styled";
-import { Button } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -8,34 +6,57 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
-import AddIcon from '@mui/icons-material/Add';
-import { VerdeEscuro, GoldPadrao, AmareloIntermediario, AzulPadrao, VermelhoPadrao, AmareloClaro, VerdeClaro, VerdeIntermediario } from '../../../assets/colors/CoresPadroes';
-
+import SendIcon from '@mui/icons-material/Send';
+import { useMediaQuery } from '@mui/material';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
+import { BaseButton } from './BaseButton';
+import { VerdeEscuro, AzulPadrao, GoldPadrao, AmareloIntermediario, VermelhoPadrao, AmareloClaro, VerdeClaro } from '../../../assets/colors/CoresPadroes';
 interface IButtonGeneric {
     title: any
     type?: 'submit' | 'button',
     onClick?: any,
-    typeStyle: string
+    typeStyle?: "financeiro" | "gravar" | "filtrar" | "liquidar" | "estornar" | "excluir" | "login" | "inverter_horizontal" | "inverter_vertical" | "cancelar_dialog_resolve" | "confirmar_dialog_resolve" | "dialog_alert_confirm" | "dialog_error" | 'send' | 'linkButton' | "dialog_cancelar" | 'authorization';
     fullWidth?: boolean,
-    height?: any,
     disabled?: boolean
     form?: any,
+    backgroundColor?:string
 }
 
 export const ButtonGeneric = (props: IButtonGeneric) => {
 
-    const { title, type, onClick, typeStyle, fullWidth, height, disabled, form } = props;
+    const { title, type, onClick, typeStyle, fullWidth, disabled, form, backgroundColor } = props;
+
+    const isTelaMobile = useMediaQuery('(max-width:600px)');
 
     switch (typeStyle) {
+        case "financeiro": 
+            return(
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={VerdeEscuro}
+                    hoverBackgroundColor={'#33964d'}
+                    fontColor={'white'}
+                    fullWidth={fullWidth}
+                    disabled={disabled ? true : false}
+                    disableRipple
+                    form={form || null}
+                    variant='outlined'
+                    type={type ? type : 'submit'}
+                    endIcon={<RequestQuoteIcon sx={{ marginBottom: '2px' }} />}
+                    onClick={onClick}>
+                    {title}
+                </BaseButton>
+            )
         case "gravar":
             return (
-                <ButtonStyled
-                    backgroundcolor={VerdeEscuro}
-                    backgroundcolorhover={'green'}
-                    colorprop={'white'}
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={VerdeEscuro}
+                    hoverBackgroundColor={'#33964d'}
+                    fontColor={'white'}
                     fullWidth={fullWidth}
-                    height={height}
-                    disabled={disabled || this}
+                    disabled={disabled ? true : false}
                     disableRipple
                     form={form || null}
                     variant='outlined'
@@ -43,17 +64,17 @@ export const ButtonGeneric = (props: IButtonGeneric) => {
                     endIcon={<SaveIcon sx={{ marginBottom: '2px' }} />}
                     onClick={onClick}>
                     {title}
-                </ButtonStyled>
+                </BaseButton>
             )
         case "filtrar":
             return (
-                <ButtonStyled
-                    backgroundcolor={GoldPadrao}
-                    backgroundcolorhover={AmareloIntermediario}
-                    colorprop={'#00664c'}
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={AzulPadrao}
+                    hoverBackgroundColor={AzulPadrao}
+                    fontColor={'white'}
                     fullWidth={fullWidth}
-                    height={height}
-                    disabled={disabled || this}
+                    disabled={disabled ? true : false}
                     disableRipple
                     form={form || null}
                     variant='outlined'
@@ -61,34 +82,35 @@ export const ButtonGeneric = (props: IButtonGeneric) => {
                     endIcon={<FilterListIcon sx={{ marginBottom: '2px' }} />}
                     onClick={onClick}>
                     {title}
-                </ButtonStyled>
+                </BaseButton>
             )
         case "liquidar":
             return (
-                <ButtonStyled
-                    backgroundcolor={AzulPadrao}
-                    backgroundcolorhover={'#0054a7'}
-                    colorprop={'white'}
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={AzulPadrao}
+                    hoverBackgroundColor={'#0054a7'}
+                    fontColor={'white'}
                     fullWidth={fullWidth}
-                    height={height}
-                    disabled={disabled || this}
+                    disabled={disabled ? true : false}
                     disableRipple
                     form={form || null}
                     variant='outlined'
                     type={type ? type : 'submit'}
+                    endIcon={<FileDownloadIcon sx={{ marginBottom: '2px' }} />}
                     onClick={onClick}>
                     {title}
-                </ButtonStyled>
+                </BaseButton>
             )
         case "estornar":
             return (
-                <ButtonStyled
-                    backgroundcolor={GoldPadrao}
-                    backgroundcolorhover={AmareloIntermediario}
-                    colorprop={'#002022'}
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={GoldPadrao}
+                    hoverBackgroundColor={AmareloIntermediario}
+                    fontColor={'#002022'}
                     fullWidth={fullWidth}
-                    height={height}
-                    disabled={disabled || this}
+                    disabled={disabled ? true : false}
                     disableRipple
                     form={form || null}
                     variant='outlined'
@@ -96,17 +118,17 @@ export const ButtonGeneric = (props: IButtonGeneric) => {
                     endIcon={<RestoreIcon sx={{ marginBottom: '2px' }} />}
                     onClick={onClick}>
                     {title}
-                </ButtonStyled>
+                </BaseButton>
             )
         case "excluir":
             return (
-                <ButtonStyled
-                    backgroundcolor={VermelhoPadrao}
-                    backgroundcolorhover={'#ec0000'}
-                    colorprop={'white'}
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={VermelhoPadrao}
+                    hoverBackgroundColor={'#ec0000'}
+                    fontColor={'white'}
                     fullWidth={fullWidth}
-                    height={height}
-                    disabled={disabled || this}
+                    disabled={disabled ? true : false}
                     disableRipple
                     form={form || null}
                     variant='outlined'
@@ -114,35 +136,17 @@ export const ButtonGeneric = (props: IButtonGeneric) => {
                     endIcon={<DeleteIcon sx={{ marginBottom: '2px' }} />}
                     onClick={onClick}>
                     {title}
-                </ButtonStyled>
+                </BaseButton>
             )
-        case "adicionar":
+        case "login":
             return (
-                <ButtonStyled
-                    backgroundcolor={AzulPadrao}
-                    backgroundcolorhover={'blue'}
-                    colorprop={'white'}
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={GoldPadrao}
+                    hoverBackgroundColor={AmareloIntermediario}
+                    fontColor={VerdeEscuro}
                     fullWidth={fullWidth}
-                    height={height}
-                    disabled={disabled || this}
-                    disableRipple
-                    form={form || null}
-                    variant='outlined'
-                    type={type ? type : 'submit'}
-                    endIcon={<AddIcon sx={{ marginBottom: '2px' }} />}
-                    onClick={onClick}>
-                    {title}
-                </ButtonStyled>
-            )
-        case 'login':
-            return (
-                <ButtonStyled
-                    backgroundcolor={GoldPadrao}
-                    backgroundcolorhover={'yellow'}
-                    colorprop={'green'}
-                    fullWidth={fullWidth}
-                    height={height}
-                    disabled={disabled || this}
+                    disabled={disabled ? true : false}
                     disableRipple
                     form={form || null}
                     variant='outlined'
@@ -150,18 +154,37 @@ export const ButtonGeneric = (props: IButtonGeneric) => {
                     endIcon={<LoginIcon sx={{ marginBottom: '2px' }} />}
                     onClick={onClick}>
                     {title}
-                </ButtonStyled>
+                </BaseButton>
+            )
+        case "send":
+            return (
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={AzulPadrao}
+                    hoverBackgroundColor={'white'}
+                    fontColor={'white'}
+                    hoverColor={AzulPadrao}
+                    fullWidth={fullWidth}
+                    disabled={disabled ? true : false}
+                    disableRipple
+                    form={form || null}
+                    variant='outlined'
+                    type={type ? type : 'submit'}
+                    endIcon={<SendIcon sx={{ marginBottom: '2px' }} />}
+                    onClick={onClick}>
+                    {title}
+                </BaseButton>
             )
 
         case "inverter_horizontal":
             return (
-                <ButtonStyled
-                    backgroundcolor={GoldPadrao}
-                    backgroundcolorhover={AmareloIntermediario}
-                    colorprop={'#002022'}
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={GoldPadrao}
+                    hoverBackgroundColor={AmareloIntermediario}
+                    fontColor={'#002022'}
                     fullWidth={fullWidth}
-                    height={height}
-                    disabled={disabled || this}
+                    disabled={disabled ? true : false}
                     disableRipple
                     form={form || null}
                     variant='outlined'
@@ -169,17 +192,17 @@ export const ButtonGeneric = (props: IButtonGeneric) => {
                     endIcon={<SwapHorizIcon sx={{ marginBottom: '2px' }} />}
                     onClick={onClick}>
                     {title}
-                </ButtonStyled>
+                </BaseButton>
             )
         case "inverter_vertical":
             return (
-                <ButtonStyled
-                    backgroundcolor={GoldPadrao}
-                    backgroundcolorhover={AmareloIntermediario}
-                    colorprop={'#002022'}
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={GoldPadrao}
+                    hoverBackgroundColor={AmareloIntermediario}
+                    fontColor={'#002022'}
                     fullWidth={fullWidth}
-                    height={height}
-                    disabled={disabled || this}
+                    disabled={disabled ? true : false}
                     disableRipple
                     form={form || null}
                     variant='outlined'
@@ -187,151 +210,149 @@ export const ButtonGeneric = (props: IButtonGeneric) => {
                     endIcon={<SwapVertIcon sx={{ marginBottom: '2px' }} />}
                     onClick={onClick}>
                     {title}
-                </ButtonStyled>
+                </BaseButton>
             )
-        case 'cancelar_dialog_resolve':
+        case "cancelar_dialog_resolve":
             return (
-                <ButtonStyled
-                    backgroundcolor={'white'}
-                    backgroundcolorhover={AmareloClaro}
-                    colorprop={AzulPadrao}
-                    fullWidth={fullWidth}
-                    height={height}
-                    disabled={disabled || this}
-                    disableRipple
-                    form={form || null}
-                    variant='outlined'
-                    type={type ? type : 'submit'}
-                    onClick={onClick}>
-                    {title}
-                </ButtonStyled>
-            )
-        case 'confirmar_dialog_resolve':
-            return (
-                <ButtonStyled
-                    backgroundcolor={GoldPadrao}
-                    backgroundcolorhover={'white'}
-                    colorprop={AzulPadrao}
-                    fullWidth={fullWidth}
-                    height={height}
-                    disabled={disabled || this}
-                    disableRipple
-                    form={form || null}
-                    variant='outlined'
-                    type={type ? type : 'submit'}
-                    onClick={onClick}>
-                    {title}
-                </ButtonStyled>
-            )
-
-        case 'dialog_error':
-            return (
-                <ButtonStyled
-                    backgroundcolor={'white'}
-                    backgroundcolorhover={AmareloClaro}
-                    colorprop={VermelhoPadrao}
-                    fullWidth={fullWidth}
-                    height={height}
-                    disabled={disabled || this}
-                    disableRipple
-                    form={form || null}
-                    variant='outlined'
-                    type={type ? type : 'submit'}
-                    onClick={onClick}>
-                    {title}
-                </ButtonStyled>
-            )
-        case 'dialog_alert_confirm':
-            return (
-                <ButtonStyled
-                    backgroundcolor={VerdeEscuro}
-                    backgroundcolorhover={'white'}
-                    colorhover={VerdeEscuro}
-                    colorprop={'white'}
-                    fullWidth={fullWidth}
-                    height={height}
-                    disabled={disabled || this}
-                    disableRipple
-                    form={form || null}
-                    variant='outlined'
-                    type={type ? type : 'submit'}
-                    onClick={onClick}>
-                    {title}
-                </ButtonStyled>
-            )
-        case "dialog_cancelar":
-            return (
-                <ButtonStyled
-                    backgroundcolor={VermelhoPadrao}
-                    backgroundcolorhover={'#ec0000'}
-                    colorprop={'white'}
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={'white'}
+                    hoverBackgroundColor={AmareloClaro}
+                    fontColor={AzulPadrao}
                     fullWidth={fullWidth}
                     disabled={disabled ? true : false}
                     disableRipple
                     form={form || null}
                     variant='outlined'
                     type={type ? type : 'submit'}
-                    onClick={onClick} 
-                    height={height}
-                    >
+                    onClick={onClick}>
                     {title}
-                </ButtonStyled>
+                </BaseButton>
             )
-        default:
+        case "confirmar_dialog_resolve":
             return (
-                <ButtonStyled
-                    backgroundcolor={VerdeEscuro}
-                    backgroundcolorhover={'#33964d'}
-                    colorprop={'white'}
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={GoldPadrao}
+                    hoverBackgroundColor={'white'}
+                    fontColor={AzulPadrao}
                     fullWidth={fullWidth}
-                    height={height}
-                    disabled={disabled || this}
+                    disabled={disabled ? true : false}
                     disableRipple
                     form={form || null}
                     variant='outlined'
                     type={type ? type : 'submit'}
                     onClick={onClick}>
                     {title}
-                </ButtonStyled>
+                </BaseButton>
+            )
+        case "dialog_cancelar":
+            return (
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={VermelhoPadrao}
+                    hoverBackgroundColor={'#ec0000'}
+                    fontColor={'white'}
+                    fullWidth={fullWidth}
+                    disabled={disabled ? true : false}
+                    disableRipple
+                    form={form || null}
+                    variant='outlined'
+                    type={type ? type : 'submit'}
+                    onClick={onClick}>
+                    {title}
+                </BaseButton>
             )
 
+        case "dialog_error":
+            return (
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={'white'}
+                    hoverBackgroundColor={AmareloClaro}
+                    fontColor={VermelhoPadrao}
+                    fullWidth={fullWidth}
+                    disabled={disabled ? true : false}
+                    disableRipple
+                    form={form || null}
+                    variant='outlined'
+                    type={type ? type : 'submit'}
+                    onClick={onClick}>
+                    {title}
+                </BaseButton>
+            )
+        case "dialog_alert_confirm":
+            return (
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={VerdeEscuro}
+                    hoverBackgroundColor={VerdeClaro}
+                    hoverColor={'white'}
+                    fontColor={'white'}
+                    fullWidth={fullWidth}
+                    disabled={disabled ? true : false}
+                    disableRipple
+                    form={form || null}
+                    variant='outlined'
+                    type={type ? type : 'submit'}
+                    onClick={onClick}>
+                    {title}
+                </BaseButton>
+            )
+        case "linkButton":
+            return (
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={'transparent'}
+                    hoverBackgroundColor={'transparent'}
+                    hoverColor={'white'}
+                    hoverUnderlineText
+                    fontColor={'white'}
+                    fullWidth={fullWidth}
+                    disabled={disabled ? true : false}
+                    disableRipple
+                    form={form || null}
+                    variant='outlined'
+                    type={type ? type : 'submit'}
+                    onClick={onClick}>
+                    {title}
+                </BaseButton>
+            )
+        case "authorization":
+            return (
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={GoldPadrao}
+                    hoverBackgroundColor={AmareloIntermediario}
+                    fontColor={VerdeEscuro}
+                    fullWidth={fullWidth}
+                    disabled={disabled ? true : false}
+                    disableRipple
+                    form={form || null}
+                    variant='outlined'
+                    type={type ? type : 'submit'}
+                    endIcon={<LockOpenIcon sx={{ marginBottom: '2px' }} />}
+                    onClick={onClick}>
+                    {title}
+                </BaseButton>
+            )
+        default:
+            return (
+                <BaseButton
+                    isTelaMobile={isTelaMobile}
+                    backgroundColor={backgroundColor}
+                    hoverBackgroundColor={'#33964d'}
+                    fontColor={'white'}
+                    fullWidth={fullWidth}
+                    disabled={disabled ? true : false}
+                    disableRipple
+                    form={form || null}
+                    variant='outlined'
+                    type={type ? type : 'submit'}
+                    onClick={onClick}>
+                    {title}
+                </BaseButton>
+            )
 
     }
 }
-
-interface IButtonStyled {
-    fullWidth: any,
-    backgroundcolor: any,
-    colorprop: any,
-    height: any,
-    backgroundcolorhover: any,
-    colorhover?: any,
-    component?: React.ElementType
-}
-
-export const ButtonStyled = styled(Button)(({ fullWidth, backgroundcolor, colorprop, height, backgroundcolorhover, colorhover }: IButtonStyled) => (
-    {
-        width: fullWidth ? '100%' : 'auto',
-        backgroundColor: backgroundcolor,
-        color: colorprop,
-        height: height || '50px',
-        letterSpacing: 1,
-        fontSize: '17px',
-        padding: 20,
-        border: 'none',
-        ':hover': {
-            backgroundColor: backgroundcolorhover,
-            border: 'none',
-            color: colorhover
-        },
-        ':focus': {
-            outline: 'none !important;;'
-        },
-        '&.Mui-disabled': {
-            opacity: 0.7,
-            pointerEvents: 'none',
-            backgroundColor: '#969696',
-            color: 'white',
-            border: 'none'
-        },
-    }));

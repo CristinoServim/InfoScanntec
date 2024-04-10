@@ -20,9 +20,7 @@ interface Loja {
 
 export const Configuracoes = () => {
 
-    //const [error, setError] = useState<boolean>(false)
-
-    const [lojas, setLojas] = useState([{ nome: '', codigo: 0, }])
+    const [msgErroApi, setMsgErroApi] = useState<string>('')
 
     const validationSchema = Yup.object({
 
@@ -144,30 +142,6 @@ export const Configuracoes = () => {
     };
 
     const onSubmit = async (data: any) => {
-        const lojasAtivas = [];
-
-        for (let i = 1; i <= 5; i++) {
-            const lojaNome = data[`lojaNome${i}`];
-            const lojaCodigo = data[`lojaCodigo${i}`];
-            const lojaCodigoScanntech = data[`lojaCodigoScanntech${i}`];
-
-            if (lojaCodigo && lojaCodigoScanntech) {
-                lojasAtivas.push({
-                    lojaNome,
-                    lojaCodigo,
-                    lojaCodigoScanntech
-                });
-                delete data[`lojaCodigo${i}`]
-                delete data[`lojaCodigoScanntech${i}`]
-                delete data[`lojaNome${i}`]
-            }
-            else {
-                console.log(`Loja ${i} não foi inserida em lojas ativas, pois um dos códigos não foi informado!`)
-            }
-        }
-
-        data.lojasAtivas = lojasAtivas;
-
         try {
             const res = await axios.post(API_ENDPOINTS.configurascanntec, data);
 
@@ -181,35 +155,11 @@ export const Configuracoes = () => {
         }
     };
 
-
-    const excluirLoja = (index: number) => {
-        if (index === 0) {
-            console.log("Exclusão falhou, pois é obrigatório o envio de pelomenos uma loja!")
-        }
-        else {
-            setLojas((lojas) => lojas.filter((_, i) => i !== index))
-            const campos = lojasMapeamento[index];
-            setValue(campos.nome, null);
-            setValue(campos.codigo, null);
-            setValue(campos.codigoscanntec, null);
-        }
-    }
-
     const { usuarioLogado } = useAuth();
 
     useEffect(() => {
         if (usuarioLogado) {
             reset(usuarioLogado)
-            setLojas(usuarioLogado.lojasAtivas)
-
-            usuarioLogado.lojasAtivas.forEach((loja: any, index: number) => {
-                const campos = lojasMapeamento[index];
-                if (campos) {
-                    setValue(campos.nome, loja.lojaNome);
-                    setValue(campos.codigo, loja.lojaCodigo);
-                    setValue(campos.codigoscanntec, loja.lojaCodigoScanntech);
-                }
-            });
         }
     }, [reset, setValue, usuarioLogado])
 
@@ -251,34 +201,6 @@ export const Configuracoes = () => {
                         </Grid>
                     </Grid>
 
-                </CardContent>
-            </Card>
-
-            <Card sx={{ margin: 2 }}>
-                <CardContent>
-                    <Typography variant='h5' sx={{ borderBottom: 'solid 1px black', marginBottom: 3 }}>Lojas</Typography>
-                    {lojas.map((loja, index) => (
-                        <Box key={index} sx={{ marginBottom: 3 }}>
-                            <Grid container direction='row' spacing={1.5}>
-                                <Grid item xs={12} md={4} lg={3.4} xl={3.4}>
-                                    <TxtFieldForm label='Nome' name={`lojaNome${index + 1}`} control={control} />
-                                </Grid>
-                                <Grid item xs={12} md={4} lg={3.3} xl={3.3}>
-                                    <TxtFieldForm label='Código' name={`lojaCodigo${index + 1}`} control={control} />
-                                </Grid>
-                                <Grid item xs={12} md={4} lg={3.3} xl={3.3}>
-                                    <TxtFieldForm label='Código Scanntech' name={`lojaCodigoScanntech${index + 1}`} control={control} />
-                                </Grid>
-                                <Grid item xs={12} md={12} lg={2} xl={2} sx={{ marginTop: '3px' }}>
-                                    <ButtonGeneric title={'Excluir'} typeStyle='excluir' fullWidth type='button' onClick={() => excluirLoja(index)} />
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    ))}
-
-                    {lojas.length < 5 &&
-                        <ButtonGeneric title={'Adicionar loja'} typeStyle='adicionar' onClick={(novaLoja: Loja) => setLojas([...lojas, novaLoja])} type='button' fullWidth />
-                    }
                 </CardContent>
             </Card>
 
