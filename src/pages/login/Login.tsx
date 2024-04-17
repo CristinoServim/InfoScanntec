@@ -37,6 +37,7 @@ export const Login: React.FC<ILoginProps> = ({ }) => {
             }
             const res = await axios.post(API_ENDPOINTS.loginscanntec, objRequest);
            if (res.status === 200) {
+                console.log(res)
                 gravarUsuario(res.data)
                 navigate('/home')
                 setDrawerOptions([
@@ -47,8 +48,8 @@ export const Login: React.FC<ILoginProps> = ({ }) => {
                     },
                     {
                         icon: 'settings',
-                        path: '/configuracao',
-                        label: 'Configurações',
+                        path: '/integracao',
+                        label: 'Integração',
                     },
                     {
                         icon: 'send',

@@ -1,24 +1,25 @@
-// AuthContext.tsx
 import { createContext, useContext, useState, useEffect } from 'react';
+import { extrairHora } from '../../functions/ExtrairHora';
 
-// Defina o tipo para o usuário
-type User = {
-    empresa: number;
-    local: number;
+export type Usuario = {
+    iap_codempresaapi: number;
+    iap_local: number;
+    loj_cnpj: string;
     usu_codigo: string;
     usu_apelido: string,
-    usu_pass: string;
-    intervaloSincronizacao: number;
-    horaFechamento: string;
-    urlBase: string;
-    urlRecebimento: string;
-    urlEnvio: string;
-    lojasAtivas: any
+    iap_usuario: string,
+    iap_senha: string;
+    iap_intervalosinc: number;
+    iap_horafechamento: string;
+    iap_urlbase: string;
+    iap_urlpromocao: string;
+    iap_urlenvio: string;
+    token: string
 };
 
 type AuthContextType = {
-    usuarioLogado: User | null;
-    gravarUsuario: (userData: User) => void;
+    usuarioLogado: Usuario | null;
+    gravarUsuario: (userData: Usuario) => void;
     limparUsuario: () => void;
 };
 
@@ -29,29 +30,23 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-    const [usuarioLogado, setUsuarioLogado] = useState<User | null>(() => {
+    const [usuarioLogado, setUsuarioLogado] = useState<Usuario | null>(() => {
         // Tente recuperar as informações do usuário do sessionStorage ao inicializar
         const usuarioSalvo = sessionStorage.getItem('usuarioLogado');
         return usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
     });
 
-    const gravarUsuario = (userData: User) => {
-        // Atualize o estado
+    const gravarUsuario = (userData: Usuario) => {
+        userData.iap_horafechamento = extrairHora(userData.iap_horafechamento)
         setUsuarioLogado(userData);
-
-        // Armazene as informações no sessionStorage como JSON
         sessionStorage.setItem('usuarioLogado', JSON.stringify(userData));
     };
 
     const limparUsuario = () => {
-        // Limpe o estado
         setUsuarioLogado(null);
-
-        // Remova as informações do sessionStorage
         sessionStorage.removeItem('usuarioLogado');
     };
 
-    // Use useEffect para atualizar o sessionStorage sempre que o usuário mudar
     useEffect(() => {
         if (usuarioLogado) {
             sessionStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));

@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useDrawerContext } from '../shared/contexts';
-import { Configuracoes, Login } from '../shared/components';
 import { useAuth } from '../shared/contexts/AuthContext';
 import { Cadastro } from '../pages/cadastro/Cadastro';
 import { Envios } from '../pages/envios/Envios';
 import { Home } from '../pages/home/Home';
 import ProtectedRoute from './ProtectedRoute';
+import { Login } from '../pages/login/Login';
+import { Integracao } from '../pages/integracao/Integracao';
 
 export const AppRoutes = () => {
   const { setDrawerOptions, openDrawer } = useDrawerContext();
@@ -22,8 +23,8 @@ export const AppRoutes = () => {
         },
         {
           icon: 'settings',
-          path: '/configuracao',
-          label: 'Configurações',
+          path: '/integracao',
+          label: 'Integração',
         },
         {
           icon: 'send',
@@ -40,7 +41,7 @@ export const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/cadastro" element={<Cadastro />} />
       <Route path="/envios" element={<ProtectedRoute element={<Envios />} />} />
-      <Route path="/configuracao" element={<ProtectedRoute element={<Configuracoes />} />} />
+      <Route path="/integracao" element={<ProtectedRoute element={<Integracao />} />} />
       <Route path="/home" element={<ProtectedRoute element={<Home />} />} />
       <Route path="*" element={<Navigate to="/login" replace />} />
   </Routes>

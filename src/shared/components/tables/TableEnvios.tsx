@@ -58,9 +58,9 @@ export default function TableEnvios(props: ITableEnvios) {
     return (
         <>
 
-            <Paper sx={{ width: '100%' }}>
+            <Paper sx={{ width: '100%', boxShadow: '0 1px 8px 0 #9999, 0 2px 2px 0 #9999'}}>
                 <TablePaginatedToolBar titleToolbar={titleToolbar} setFilterAtom={setFilterAtom} />
-                <TableContainer sx={{ height: 480, padding: 0, paddingTop: 0 }}>
+                <TableContainer sx={{ height: 480, padding: 0, paddingTop: 0, }}>
                     <Table stickyHeader>
                         <TablePaginatedHeader columns={columns} />
                         <TablePaginatedBody status={filterAtom.status} selectorRecoil={selectorRecoil} columns={columns} item={item} setItem={setItem} setTamanhoLista={setTamanhoLista} page={page} rowsPerPage={rowsPerPage} />

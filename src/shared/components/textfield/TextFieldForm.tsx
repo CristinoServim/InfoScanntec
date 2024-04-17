@@ -1,26 +1,22 @@
 import { TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { VermelhoPadrao, AzulPadrao, VerdeIntermediario, GoldPadrao, VerdeClaro, VerdeEscuro } from "../../../assets/colors/CoresPadroes";
+import { formatCNPJ } from "../../../functions/formats/formatCNPJ";
 
 interface ITxtFieldForm {
     name: string,
     control: any,
     label: string,
     readOnly?: boolean,
-    onBlurCustom?: any,
     type?: string,
-    casasDecimais?: any,
     textAlign?: 'left' | 'right' | 'center',
     isRequired?: boolean,
-    mask?: 'cnpj' | 'cpf' | 'fone' | 'cep' | 'rg',
-    isRef?: boolean,
-    setSearchHook?: any,
-    searchHook?: any,
+    mask?: 'cnpj',
 }
 
 export const TxtFieldForm = (props: ITxtFieldForm) => {
 
-    const { name, control, label, readOnly, type, textAlign, isRequired, isRef } = props
+    const { name, control, label, readOnly, type, textAlign, isRequired, mask } = props
 
 
     return (
@@ -38,13 +34,15 @@ export const TxtFieldForm = (props: ITxtFieldForm) => {
                         InputProps={{
                             style: { textAlign: textAlign || 'left', fontSize: '0.95rem' },
                         }}
-                        InputLabelProps={{ style: { color: error ? VermelhoPadrao : isRef ? AzulPadrao : VerdeIntermediario, fontSize: '1.15rem' } }}
+                        InputLabelProps={{ style: { color: error ? VermelhoPadrao : VerdeIntermediario, fontSize: '1.15rem' } }}
                         value={value || ""}
                         type={type || 'text'}
                         label={label}
                         onChange={(e: any) => {
                             let value = e.target.value
-
+                            if(mask === 'cnpj'){
+                                value = formatCNPJ(value)
+                            }
                             onChange(value)
                         }}
                         variant="outlined"
@@ -54,12 +52,12 @@ export const TxtFieldForm = (props: ITxtFieldForm) => {
                                 width: '100%',
                                 "& .MuiInputBase-root.Mui-disabled": {
                                     "& > fieldset": {
-                                        borderColor: isRequired ? GoldPadrao : isRef ? AzulPadrao : this
+                                        borderColor: isRequired ? GoldPadrao : this
                                     },
                                 },
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldset': {
-                                        borderColor: error ? VermelhoPadrao : isRequired ? GoldPadrao : isRef ? AzulPadrao : VerdeIntermediario,
+                                        borderColor: error ? VermelhoPadrao : isRequired ? GoldPadrao : VerdeIntermediario,
                                         borderWidth: isRequired ? 2 : 1,
                                         fontSize: '1.12rem',
                                     },

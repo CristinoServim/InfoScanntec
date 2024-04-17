@@ -4,10 +4,8 @@ import { ButtonGeneric } from '../../shared/components/button/ButtonGeneric';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useAuth } from '../../shared/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/imgs/logo copy.png'
-import { useDrawerContext } from '../../shared/contexts';
 import { TextFieldLogin } from '../../shared/components/textfield/TextFieldLogin';
 import { API_ENDPOINTS } from '../../config/apiConfig';
 import { VerdeEscuro } from '../../assets/colors/CoresPadroes';
@@ -26,10 +24,6 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
     const [msgErroApi, setMsgErroApi] = useState<string>('')
     const showDialogSucess = useDialogSucess()
 
-    const { gravarUsuario } = useAuth();
-    const { setDrawerOptions, toggleDrawerOpen } = useDrawerContext();
-
-
     const onSubmit = async (data: any) => {
         const objRequest =
         {
@@ -41,26 +35,11 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
         try {
             const res = await axios.post(API_ENDPOINTS.cadastroscanntech, objRequest);
 
-            if (res.status === 200) {
-                console.log(res.data)
-                gravarUsuario(res.data)
+            if (res.status === 200 || res.status === 201) {
                 await showDialogSucess({
-                    headerMessage: 'Itens enviados com sucesso!'
+                    headerMessage: 'Usuário cadastrado com sucesso!'
                 })
-                navigate('/home')
-                setDrawerOptions([
-                    {
-                        icon: 'home',
-                        path: '/home',
-                        label: 'Home',
-                    },
-                    {
-                        icon: 'settings',
-                        path: '/configuracao',
-                        label: 'Configurações',
-                    },
-                ]);
-                toggleDrawerOpen()
+                navigate('/login')
             } else {
                 console.log("Erro no cadastro");
             }
