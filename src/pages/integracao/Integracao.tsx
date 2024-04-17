@@ -187,7 +187,7 @@ export const Integracao = () => {
 
             <Grid item xs={12} md={12} lg={12} xl={12} sx={{ margin: 2 }}>
                 <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <ButtonGeneric title={"Salvar"} typeStyle="gravar" form={'form-principal'} disabled={usuarioLogado?.iap_codempresaapi !== undefined}/>
+                    <ButtonGeneric title={"Salvar"} typeStyle="gravar" form={'form-principal'}/>
                 </Box>
             </Grid>
 
