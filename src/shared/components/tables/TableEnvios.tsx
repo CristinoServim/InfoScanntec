@@ -19,6 +19,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { reenviar } from "../../../recoil/envios/enviosActions";
 import { useDialogConfirm } from "../dialogs/DialogProviderConfirm";
 import { useDialogSucess } from "../dialogs/DialogProviderSucess";
+import { useAuth } from "../../contexts/AuthContext";
 
 
 interface ITableEnvios {
@@ -82,6 +83,7 @@ function TablePaginatedToolBar(props: ITablePaginatedToolBar) {
 
     const { titleToolbar, setFilterAtom } = props;
 
+    const { usuarioLogado } = useAuth();
     const [status, setStatus] = useRecoilState<any>(statusFilterAtom);
     const [dtInicial, setDtInicial] = useRecoilState<any>(dtInicialFilterAtom);
     const [dtFinal, setDtFinal] = useRecoilState<any>(dtFinalFiterAtom);
@@ -100,7 +102,7 @@ function TablePaginatedToolBar(props: ITablePaginatedToolBar) {
     };
 
     const filtrar = () => {
-        setFilterAtom({ dataInicial: dtInicial, dataFinal: dtFinal, status: status === 'Enviados' ? 'S' : 'N', lojaCodigo: lojaCodigo })
+        setFilterAtom({ dataInicial: dtInicial, dataFinal: dtFinal, status: status === 'Enviados' ? 'S' : 'N', lojCnpj: usuarioLogado?.loj_cnpj })
     }
 
     return (

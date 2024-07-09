@@ -86,8 +86,6 @@ export const Integracao = () => {
             }
         } catch (error: any) {
             console.error("Erro:", error);
-            console.log(error.response.data.message)
-            setMsgErroApi(error.response.data.message)
         }
     };
 

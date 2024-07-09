@@ -100,7 +100,7 @@ export const Cadastro: React.FC<ICadastroProps> = () => {
                             </Grid>
 
                             <Grid item xs={12} md={12} lg={12} xl={12}>
-                                <TextFieldLogin label='Usuário' name='usuario' control={control} />
+                                <TextFieldLogin label='Email Scanntech' name='usuario' control={control} />
                             </Grid>
                             <Grid item xs={6} md={6} lg={6} xl={6}>
                                 <TextFieldLogin label='Senha' name='senha' control={control} type='password' />

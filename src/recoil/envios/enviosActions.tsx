@@ -3,8 +3,7 @@ import { API_ENDPOINTS } from "../../config/apiConfig";
 
 export async function enviosFilter(objFilter: any) {
     try {
-        const res = await axios.post(API_ENDPOINTS.movimentospdvenviados, { sdaDataBaixaIni: objFilter.dataInicial, sdaDataBaixaFin: objFilter.dataFinal, sdaEnvioScanntec: objFilter.status });
-        console.log(res)
+        const res = await axios.post(API_ENDPOINTS.movimentospdvenviados, { sdaDataBaixaIni: objFilter.dataInicial, sdaDataBaixaFin: objFilter.dataFinal, sdaEnvioScanntec: objFilter.status, lojCnpj: objFilter.lojCnpj });
         return res.data
     } catch (error) {
         return []
