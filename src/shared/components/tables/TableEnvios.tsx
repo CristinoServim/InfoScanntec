@@ -1,8 +1,6 @@
 import { Box, FormControl, Grid, IconButton, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, TextField, Toolbar, Typography, useTheme } from "@mui/material";
 import { useRecoilRefresher_UNSTABLE, useRecoilState, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { Fragment, useEffect, useState } from "react";
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { KeyboardArrowRight, KeyboardArrowLeft } from "@mui/icons-material";
 import LastPageIcon from '@mui/icons-material/LastPage';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
@@ -20,6 +18,7 @@ import { reenviar } from "../../../recoil/envios/enviosActions";
 import { useDialogConfirm } from "../dialogs/DialogProviderConfirm";
 import { useDialogSucess } from "../dialogs/DialogProviderSucess";
 import { useAuth } from "../../contexts/AuthContext";
+import { getData } from "../../../functions/GetDataHora";
 
 
 interface ITableEnvios {
@@ -47,27 +46,44 @@ export interface ITablePaginatedColumn {
 }
 
 export default function TableEnvios(props: ITableEnvios) {
+    const { usuarioLogado } = useAuth();
 
     const { columns, selectorRecoil, item, setItem, titleToolbar } = props;
     const [tamanhoLista, setTamanhoLista] = useState(0)
 
-    const [rowsPerPage, setRowsPerPage] = useState(5); // Quantidade de itens por página
-    const [page, setPage] = useState(0); // Página atual começa do 0
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [page, setPage] = useState(0);
 
     const [filterAtom, setFilterAtom] = useRecoilState(enviosFilterAtom)
+    const [filtersInitialized, setFiltersInitialized] = useState(false)
+
+    useEffect(() => {
+        const dataAtual = getData()
+        setFilterAtom({
+            dataInicial: dataAtual,
+            dataFinal: dataAtual,
+            status: 'N',
+            lojCnpj: usuarioLogado?.loj_cnpj || ''
+        });
+        setFiltersInitialized(true)
+    }, [usuarioLogado, setFilterAtom])
 
     return (
         <>
 
-            <Paper sx={{ width: '100%', boxShadow: '0 1px 8px 0 #9999, 0 2px 2px 0 #9999'}}>
-                <TablePaginatedToolBar titleToolbar={titleToolbar} setFilterAtom={setFilterAtom} />
-                <TableContainer sx={{ height: 480, padding: 0, paddingTop: 0, }}>
-                    <Table stickyHeader>
-                        <TablePaginatedHeader columns={columns} />
-                        <TablePaginatedBody status={filterAtom.status} selectorRecoil={selectorRecoil} columns={columns} item={item} setItem={setItem} setTamanhoLista={setTamanhoLista} page={page} rowsPerPage={rowsPerPage} />
-                    </Table>
-                </TableContainer>
-                <TablePaginatedPagination tamanhoLista={tamanhoLista} page={page} setPage={setPage} rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage} />
+            <Paper sx={{ width: '100%', boxShadow: '0 1px 8px 0 #9999, 0 2px 2px 0 #9999' }}>
+                {filtersInitialized &&
+                    <>
+                        <TablePaginatedToolBar titleToolbar={titleToolbar} setFilterAtom={setFilterAtom} usuarioLogado={usuarioLogado} />
+                        <TableContainer sx={{ height: 480, padding: 0, paddingTop: 0, }}>
+                            <Table stickyHeader>
+                                <TablePaginatedHeader columns={columns} />
+                                <TablePaginatedBody usuarioLogado={usuarioLogado} status={filterAtom.status} selectorRecoil={selectorRecoil} columns={columns} item={item} setItem={setItem} setTamanhoLista={setTamanhoLista} page={page} rowsPerPage={rowsPerPage} />
+                            </Table>
+                        </TableContainer>
+                        <TablePaginatedPagination tamanhoLista={tamanhoLista} page={page} setPage={setPage} rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage} />
+                    </>
+                }
             </Paper>
 
         </>
@@ -76,18 +92,27 @@ export default function TableEnvios(props: ITableEnvios) {
 
 interface ITablePaginatedToolBar {
     titleToolbar?: string,
-    setFilterAtom: any
+    setFilterAtom: any,
+    usuarioLogado: any
 }
 
 function TablePaginatedToolBar(props: ITablePaginatedToolBar) {
 
-    const { titleToolbar, setFilterAtom } = props;
+    const { titleToolbar, setFilterAtom, usuarioLogado } = props;
 
-    const { usuarioLogado } = useAuth();
     const [status, setStatus] = useRecoilState<any>(statusFilterAtom);
     const [dtInicial, setDtInicial] = useRecoilState<any>(dtInicialFilterAtom);
     const [dtFinal, setDtFinal] = useRecoilState<any>(dtFinalFiterAtom);
     const [lojaCodigo, setLojaCodigo] = useRecoilState<any>(lojaCodigoFilterAtom);
+
+    const dataAtual = getData()
+
+    useEffect(() => {
+        if(status === 'Enviados'){
+            setDtInicial(dataAtual)
+            setDtFinal(dataAtual)
+        }
+    }, [status])
 
     const handleStatus = (event: any) => {
         setStatus(event.target.value);
@@ -101,6 +126,10 @@ function TablePaginatedToolBar(props: ITablePaginatedToolBar) {
         setDtFinal(event.target.value);
     };
 
+    const handleLoja = (event: any) => {
+        setLojaCodigo(event.target.value);
+    };
+
     const filtrar = () => {
         setFilterAtom({ dataInicial: dtInicial, dataFinal: dtFinal, status: status === 'Enviados' ? 'S' : 'N', lojCnpj: usuarioLogado?.loj_cnpj })
     }
@@ -108,10 +137,43 @@ function TablePaginatedToolBar(props: ITablePaginatedToolBar) {
     return (
         <Toolbar>
             <Grid container direction='row' spacing={2} sx={{ paddingBottom: 2, paddingTop: 2 }}>
-                <Grid item xs={12} md={3} lg={3} xl={3}>
-                    <TextFieldNumber label={"Loja"} value={lojaCodigo} onChange={(e: any) => setLojaCodigo(e.target.value)} />
+                <Grid item xs={12} md={status === 'Não enviados' ? 6 : 3} lg={status === 'Não enviados' ? 6 : 3} xl={status === 'Não enviados' ? 6 : 3}>
+                    <FormControl fullWidth variant="outlined">
+                        <InputLabel
+                            id="demo-simple-select-outlined-label"
+                            sx={{ color: AzulPadrao, '.Mui-focused': { color: AzulPadrao }, fontWeight: 'bold', fontFamily: 'Poppins, sans-serif', fontSize: '1.15rem' }}
+                        >
+                            Loja
+                        </InputLabel>
+                        <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                            value={lojaCodigo}
+                            onChange={handleLoja}
+                            label="Loja"
+                            sx={{
+                                fontSize: 16,
+                                textAlign: 'center',
+                                color: AzulPadrao,
+                                fontWeight: 'bold',
+                                fontFamily: 'Poppins, sans-serif',
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: AzulPadrao,
+                                },
+                                '& .MuiSvgIcon-root': {
+                                    color: AzulPadrao,
+                                }
+                            }}
+                        >
+                            <MenuItem value={1}>1</MenuItem>
+                            <MenuItem value={2}>2</MenuItem>
+                            <MenuItem value={3}>3</MenuItem>
+                            <MenuItem value={4}>4</MenuItem>
+                            <MenuItem value={5}>5</MenuItem>
+                        </Select>
+                    </FormControl>
                 </Grid>
-                <Grid item xs={12} md={3} lg={3} xl={3}>
+                <Grid item xs={12} md={status === 'Não enviados' ? 6 : 3} lg={status === 'Não enviados' ? 6 : 3} xl={status === 'Não enviados' ? 6 : 3}>
                     <FormControl fullWidth variant="outlined">
                         <InputLabel
                             id="demo-simple-select-outlined-label"
@@ -124,9 +186,10 @@ function TablePaginatedToolBar(props: ITablePaginatedToolBar) {
                             id="demo-simple-select-outlined"
                             value={status}
                             onChange={handleStatus}
-                            label="Status" // Isso permite que o InputLabel flutue corretamente
+                            label="Status"
                             sx={{
                                 fontSize: 16,
+                                textAlign: 'center',
                                 color: AzulPadrao,
                                 fontWeight: 'bold',
                                 fontFamily: 'Poppins, sans-serif',
@@ -134,7 +197,7 @@ function TablePaginatedToolBar(props: ITablePaginatedToolBar) {
                                     borderColor: AzulPadrao,
                                 },
                                 '& .MuiSvgIcon-root': {
-                                    color: AzulPadrao, // Muda a cor do ícone do dropdown se necessário
+                                    color: AzulPadrao,
                                 }
                             }}
                         >
@@ -143,14 +206,18 @@ function TablePaginatedToolBar(props: ITablePaginatedToolBar) {
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid item xs={12} md={3} lg={3} xl={3}>
-                    <TextFieldDate label={"Dt. Inicial"} value={dtInicial} onChange={handleDtInicial} />
-                </Grid>
-                <Grid item xs={12} md={3} lg={3} xl={3}>
-                    <TextFieldDate label={"Dt. Inicial"} value={dtFinal} onChange={handleDtFinal} />
-                </Grid>
+                {status === 'Enviados' &&
+                    <>
+                        <Grid item xs={12} md={3} lg={3} xl={3}>
+                            <TextFieldDate label={"Dt. Inicial"} value={dtInicial} onChange={handleDtInicial} />
+                        </Grid>
+                        <Grid item xs={12} md={3} lg={3} xl={3}>
+                            <TextFieldDate label={"Dt. Inicial"} value={dtFinal} onChange={handleDtFinal} />
+                        </Grid>
+                    </>
+                }
                 <Grid item xs={12} md={12} lg={12} xl={12}>
-                    <ButtonGeneric title={'Filtrar'} typeStyle={"liquidar"} fullWidth onClick={filtrar} disabled={!dtInicial || !dtFinal} />
+                    <ButtonGeneric title={'Buscar'} typeStyle={"liquidar"} fullWidth onClick={filtrar} />
                 </Grid>
             </Grid>
         </Toolbar>
@@ -219,46 +286,54 @@ interface ITablePaginatedBody {
     page: any,
     rowsPerPage: any,
     selectorRecoil: any,
-    status: any
+    status: any,
+    usuarioLogado: any,
 }
 
 function TablePaginatedBody(props: ITablePaginatedBody) {
 
-    const { columns, item, setItem, setTamanhoLista, page, rowsPerPage, selectorRecoil, status } = props;
+    const { columns, item, setItem, setTamanhoLista, page, rowsPerPage, selectorRecoil, status, usuarioLogado } = props;
 
     const { state, contents: lista } = useRecoilValueLoadable<any>(selectorRecoil);
-    const refreshEnvios = useRecoilRefresher_UNSTABLE(selectorRecoil)
-
+    console.log(lista)
     const [listaPaginada, setListaPaginada] = useState([])
+    const refreshEnvios = useRecoilRefresher_UNSTABLE(selectorRecoil)
 
     const showDialogConfirm = useDialogConfirm()
     const showDialogSucess = useDialogSucess()
 
     useEffect(() => {
-        // Calcula o índice do primeiro e do último item da página atual
-        const indexOfLastItem = (page + 1) * rowsPerPage;
-        const indexOfFirstItem = indexOfLastItem - rowsPerPage;
-        // Filtra os contents para exibir apenas os itens da página atual
-        if (state === 'hasValue') {
+        if (state === 'hasValue' && lista?.length > 0) {
+            // Calcula o índice do primeiro e do último item da página atual
+            const indexOfLastItem = (page + 1) * rowsPerPage;
+            const indexOfFirstItem = indexOfLastItem - rowsPerPage;
+            // Filtra os contents para exibir apenas os itens da página atual
+
             setListaPaginada(lista.slice(indexOfFirstItem, indexOfLastItem))
             setTamanhoLista(lista.length)
         }
-    }, [setTamanhoLista, lista, state, page, rowsPerPage])
+        else {
+            setListaPaginada([])
+        }
+    }, [setTamanhoLista, state, lista, page, rowsPerPage])
 
     const reenviarNaoEnviados = async () => {
         const confirm = await showDialogConfirm({
             headerMessage: 'Tem certeza que deseja enviar?'
         })
-        if(confirm){
-            const res: any = await reenviar(lista)
-            if(res.status === 200){
+        if (confirm) {
+            const caixas = Array.from(new Set(lista.map((saida: any) => saida.USU_CODIGO)) as Set<number>).sort((a, b) => a - b);
+
+            console.log(caixas);
+            const res: any = await reenviar(usuarioLogado.iap_codempresaapi, usuarioLogado.iap_local, usuarioLogado.iap_usuario, usuarioLogado.iap_senha, usuarioLogado.loj_cnpj, caixas)
+            if (res.status === 200) {
                 await showDialogSucess({
                     headerMessage: 'Itens enviados com sucesso!'
                 })
             }
-            refreshEnvios() 
+            refreshEnvios()
         }
-        
+
     }
 
     return (
@@ -268,7 +343,7 @@ function TablePaginatedBody(props: ITablePaginatedBody) {
                     (
                         <TableRow>
                             <TableCell colSpan={columns.length} style={{ textAlign: 'center' }}>
-                                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                     <CircularProgress />
                                 </Box>
                             </TableCell>
@@ -282,7 +357,7 @@ function TablePaginatedBody(props: ITablePaginatedBody) {
                                     <TableRow>
                                         <TableCell colSpan={columns.length} style={{ textAlign: 'center' }}>
                                             <Box>
-                                                <ButtonGeneric title={'Enviar'} typeStyle="login" fullWidth onClick={reenviarNaoEnviados} />
+                                                <ButtonGeneric title={'Enviar'} typeStyle="gravar" fullWidth onClick={reenviarNaoEnviados} />
                                             </Box>
                                         </TableCell>
                                     </TableRow>
@@ -348,124 +423,6 @@ function TablePaginatedRow(props: ITablePaginatedRow) {
                 else {
                     return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: 'transparent', color: fontColor, padding: '10px 16px' }} key={index} align={column.align ? column.align : 'left'} scope='row' >{row[column.field]}</TableCellRowStyled>
                 }
-
-                const itemCodigo = item?.codigo
-                const rowCodigo = row.codigo
-                if (column.checkColumn && itemCodigo === rowCodigo) {
-                    return (<TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: AmareloIntermediario }} key={index} align={column.align} scope='row' onClick={() => setItem(null)}><IconButton sx={{ color: VerdeClaro, outline: 'none !important;;' }}><CheckBoxIcon /></IconButton></TableCellRowStyled>);
-                } else if (column.checkColumn && item !== row) {
-                    return (<TableCellRowStyled style={{ whiteSpace: 'nowrap' }} key={index} align={column.align} scope='row' onClick={() => { setItem(row); }}><IconButton sx={{ color: VerdeClaro, outline: 'none !important;;', }}><CheckBoxOutlineBlankIcon /></IconButton></TableCellRowStyled>);
-                } else if (typeof row[column.field] === 'boolean') {
-                    if (row[column.field] === false) {
-                        return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }} key={index} align={column.align ? column.align : 'left'} scope='row' >Inativo</TableCellRowStyled>
-                    } else {
-                        return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }} key={index} align={column.align ? column.align : 'left'} scope='row' >Ativo</TableCellRowStyled>
-
-                    }
-                } else if (column.subField) {
-                    let data = null;
-                    if (column.subSubField) {
-                        if (row[column.field] && row[column.field][column.subField] && row[column.field][column.subField][column.subSubField]) {
-                            data = row[column.field][column.subField][column.subSubField];
-                        }
-                    } else {
-                        if (row[column.field] && row[column.field][column.subField]) {
-                            data = row[column.field][column.subField]
-                        }
-                    }
-                    if (data === undefined || data === null || data === "") {
-                        return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }} key={index} align={column.align ? column.align : 'left'} scope='row' />
-                    } else
-                        // if (column.mask) {
-                        //     if (column.mask === "CNPJ") {
-                        //         return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }}
-                        //             key={index} align={column.align ? column.align : 'left'} scope='row'>
-                        //             {data.length === 14 ?
-                        //                 formatCNPJMask(data) :
-                        //                 formatCPFMask(data)}
-                        //         </TableCellRowStyled>
-                        //     } else
-                        //         if (column.mask === "CPF") {
-                        //             return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }}
-                        //                 key={index} align={column.align ? column.align : 'left'} scope='row'>
-                        //                 {data.length === 14 ?
-                        //                     formatCNPJMask(data) :
-                        //                     formatCPFMask(data)}
-                        //             </TableCellRowStyled>
-                        //         } else
-                        //             if (column.mask === "CEP") {
-                        //                 return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }}
-                        //                     key={index} align={column.align ? column.align : 'left'} scope='row'>
-                        //                     {formatCEPMask(data)}
-                        //                 </TableCellRowStyled>
-                        //             } else
-                        //                 if (column.mask === "FONE") {
-                        //                     return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }}
-                        //                         key={index} align={column.align ? column.align : 'left'} scope='row'>
-                        //                         {formatPhone(data)}
-                        //                     </TableCellRowStyled>
-                        //                 } else
-                        //                     if (column.mask === "DECIMAL") {
-                        //                         return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }}
-                        //                             key={index} align={column.align ? column.align : 'left'} scope='row'>
-                        //                             {currencyMaskNumberToStr(data, 2)}
-                        //                         </TableCellRowStyled>
-                        //                     } else if (column.mask === "DATE") {
-                        //                         return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }}
-                        //                             key={index} align={column.align ? column.align : 'left'} scope='row'>
-                        //                             {data && tratarDate(new Date(data), "/", false)}
-                        //                         </TableCellRowStyled>
-                        //                     }
-                        // }
-                        return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }} key={index} align={column.align ? column.align : 'left'} scope='row' >{data}</TableCellRowStyled>
-                }
-
-                // if (row[column.field] === null || row[column.field] === undefined || row[column.field] === "") {
-                //     return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }} key={index} align={column.align ? column.align : 'left'} scope='row' />
-                // } else
-                // if (column.mask) {
-                //     if (column.mask === "CNPJ") {
-                //         return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }}
-                //             key={index} align={column.align ? column.align : 'left'} scope='row'>
-                //             {row[column.field].length === 14 ?
-                //                 formatCNPJMask(row[column.field]) :
-                //                 formatCPFMask(row[column.field])
-                //             }
-                //         </TableCellRowStyled>
-                //     } else
-                //         if (column.mask === "CPF") {
-                //             return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }}
-                //                 key={index} align={column.align ? column.align : 'left'} scope='row'>
-                //                 {row[column.field].length === 14 ?
-                //                     formatCNPJMask(row[column.field]) :
-                //                     formatCPFMask(row[column.field])
-                //                 }
-                //             </TableCellRowStyled>
-                //         } else
-                //             if (column.mask === "CEP") {
-                //                 return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }}
-                //                     key={index} align={column.align ? column.align : 'left'} scope='row'>
-                //                     {formatCEPMask(row[column.field])}
-                //                 </TableCellRowStyled>
-                //             } else
-                //                 if (column.mask === "FONE") {
-                //                     return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }}
-                //                         key={index} align={column.align ? column.align : 'left'} scope='row'>
-                //                         {formatPhone(row[column.field])}
-                //                     </TableCellRowStyled>
-                //                 } else
-                //                     if (column.mask === "DECIMAL") {
-                //                         return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }}
-                //                             key={index} align={column.align ? column.align : 'left'} scope='row'>
-                //                             {currencyMaskNumberToStr(row[column.field], 2)}
-                //                         </TableCellRowStyled>
-                //                     } else if (column.mask === "DATE") {
-                //                         return <TableCellRowStyled style={{ whiteSpace: 'nowrap', backgroundColor: itemCodigo === rowCodigo ? AmareloIntermediario : 'transparent', color: fontColor }}
-                //                             key={index} align={column.align ? column.align : 'left'} scope='row'>
-                //                             {tratarDate(new Date(row[column.field]), "/", false)}
-                //                         </TableCellRowStyled>
-                //                     }
-                // }
             })}
         </TableRow>
     )

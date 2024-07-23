@@ -6,19 +6,13 @@ export async function enviosFilter(objFilter: any) {
         const res = await axios.post(API_ENDPOINTS.movimentospdvenviados, { sdaDataBaixaIni: objFilter.dataInicial, sdaDataBaixaFin: objFilter.dataFinal, sdaEnvioScanntec: objFilter.status, lojCnpj: objFilter.lojCnpj });
         return res.data
     } catch (error) {
-        return []
+        throw error;
     }
 }
 
-export async function reenviar(envios: any) {
+export async function reenviar(iap_codempresaapi: number, iap_local: number, iap_usuario: string, iap_senha: string, loj_cnpj: string, caixas: number[]) {
     try {
-        const enviosReq = envios.map((envio: any) => {
-            return {
-                usuCodigo: envio.USU_CODIGO,
-                sdaNumero: envio.SDA_NUMERO
-            }
-        })
-        const res = await axios.post(API_ENDPOINTS.reenviar, enviosReq);
+        const res = await axios.post(API_ENDPOINTS.reenviar, {lojaCodigo: iap_codempresaapi, lojaLocal: iap_local, usuario: iap_usuario, senha: iap_senha, lojaCnpj: loj_cnpj, caixas: caixas})
         return res
     } catch (error) {
         return error

@@ -1,5 +1,5 @@
 import { selector } from "recoil";
-import { enviosFilterAtom, lojaCodigoFilterAtom } from "./enviosAtom";
+import { enviosFilterAtom } from "./enviosAtom";
 import { enviosFilter } from "./enviosActions";
 
 export const enviosSelector = selector({

@@ -61,7 +61,7 @@ export const ButtonGeneric = (props: IButtonGeneric) => {
                     form={form || null}
                     variant='outlined'
                     type={type ? type : 'submit'}
-                    endIcon={<SaveIcon sx={{ marginBottom: '2px' }} />}
+                    endIcon={<LoginIcon sx={{ marginBottom: '2px' }} />}
                     onClick={onClick}>
                     {title}
                 </BaseButton>

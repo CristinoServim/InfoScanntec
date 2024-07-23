@@ -1,29 +1,27 @@
 import { atom } from "recoil"
-import { getData } from "../../functions/GetDataHora"
 
-const dataAtual = getData()
 
 export const statusFilterAtom = atom({
     key: 'statusFilterAtom',
-    default: 'Enviados'
+    default: 'Não enviados'
 })
 
 export const dtInicialFilterAtom = atom({
     key: 'dtInicialFilterAtom',
-    default: dataAtual
+    default: ''
 })
 
 export const dtFinalFiterAtom = atom({
     key: 'dtFinalFiterAtom',
-    default: dataAtual
+    default: ''
 })
 
 export const lojaCodigoFilterAtom = atom({
     key: 'lojaCodigoFilterAtom',
-    default: null
+    default: 1
 })
 
 export const enviosFilterAtom = atom({
     key: 'enviosFilterAtom',
-    default: { dataInicial: dataAtual, dataFinal: dataAtual, status: 'S', lojCnpj: '' }
+    default: { dataInicial: '', dataFinal: '', status: 'N', lojCnpj: ''}
 })
